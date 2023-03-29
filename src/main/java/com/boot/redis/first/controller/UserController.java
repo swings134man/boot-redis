@@ -4,9 +4,7 @@ import com.boot.redis.first.domain.User;
 import com.boot.redis.first.service.UserSerivce;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /************
  * @info : Redis User Controller
@@ -40,6 +38,28 @@ public class UserController {
         User result = serivce.addUser(user);
         log.info("Controller result: {}", result);
 
+        return result;
+    }// save
+
+
+    /**
+     * @info    : Redis에 ID 값으로 유저 정보를 가져온다.
+     * @name    : getUser
+     * @date    : 2023/03/29 5:47 PM
+     * @author  : SeokJun Kang(swings134@gmail.com)
+     * @version : 1.0.0
+     * @Description :
+     */
+    @GetMapping("/redis/v1/getUser")
+    public User getUser(@RequestParam String reqId) {
+        User userById = serivce.getUserById(reqId);
+        return userById;
+    }
+
+    // List For Post
+    @PostMapping("/redis/v1/list/post")
+    public User postForList(@RequestBody User user) {
+        User result = serivce.postForList(user);
         return result;
     }
 
