@@ -21,7 +21,7 @@ public class User {
     private String major; // 전공: back, front
     private int age;
 
-    private List<String> skils;
+//    private List<String> skils;
 
 
 }
