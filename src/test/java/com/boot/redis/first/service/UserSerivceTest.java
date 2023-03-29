@@ -21,19 +21,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserSerivceTest {
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     @Test
     void testStrings() {
         //given
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         String key = "first";
 
         //when
         valueOperations.set(key, "helloWorld!");
 
         //then
-        String value = (String) valueOperations.get(key);
+        String value = valueOperations.get(key);
         Assertions.assertThat(value).isEqualTo("helloWorld!");
     }
 
