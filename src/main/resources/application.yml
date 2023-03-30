@@ -1,5 +1,27 @@
+# Redis Config
 spring:
   redis:
     host: localhost
     port: 6379
+
+
+# MySQL Config
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/boot_redis?useSSL=false
+    username: root
+    password: 1234
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: none
+    defer-datasource-initialization: false
+  sql:
+    init:
+      mode: never
+
 
