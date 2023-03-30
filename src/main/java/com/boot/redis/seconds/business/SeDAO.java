@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Repository;
 
+import java.util.concurrent.TimeUnit;
+
 /************
  * @info : Redis - DAO : RedisTemplate 사용 클래스
  * @name : SeDAO
@@ -33,6 +35,8 @@ public class SeDAO {
         SetOperations<String, String> setOperations = template.opsForSet();
         setOperations.add("testToken", userId);
 
+        //expire
+//        template.expire(userId, 30, TimeUnit.SECONDS);
         log.info("SET 저장 완료 = {}", setOperations.members("testToken")); //UserId가 set에 저장되었는지 확인.
     }
 
@@ -48,6 +52,10 @@ public class SeDAO {
         hashOperations.put(key, "userId", tokens.getId());
         hashOperations.put(key, "accessToken", tokens.getAccessToken());
         hashOperations.put(key, "refreshToken", tokens.getRefreshToken());
+
+        // redisTemplate - Expire = hash(UserId)
+        template.expire(key, 30, TimeUnit.SECONDS);
+
 
         log.info("Hash save userId = {} ", hashOperations.get(key, "userId"));
         log.info("Hash save AT = {} ", hashOperations.get(key, "accessToken"));
