@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @Description :
  ************/
 @SpringBootTest
-class UserSerivceTest {
+class RedisUserSerivceTest {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;

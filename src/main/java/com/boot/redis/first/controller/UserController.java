@@ -1,7 +1,7 @@
 package com.boot.redis.first.controller;
 
-import com.boot.redis.first.domain.User;
-import com.boot.redis.first.service.UserSerivce;
+import com.boot.redis.first.domain.RedisUser;
+import com.boot.redis.first.service.FirstUserSerivce;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UserController {
 
-    private final UserSerivce serivce;
+    private final FirstUserSerivce serivce;
 
     /**
      * @info    : Redis에 User 정보를 저장한다.
@@ -32,10 +32,10 @@ public class UserController {
      * @Description :
      */
     @PostMapping("/redis/v1/post")
-    public User addUser(@RequestBody User user) {
-        log.info("Controller Request: {}", user);
+    public RedisUser addUser(@RequestBody RedisUser redisUser) {
+        log.info("Controller Request: {}", redisUser);
 
-        User result = serivce.addUser(user);
+        RedisUser result = serivce.addUser(redisUser);
         log.info("Controller result: {}", result);
 
         return result;
@@ -51,15 +51,15 @@ public class UserController {
      * @Description :
      */
     @GetMapping("/redis/v1/getUser")
-    public User getUser(@RequestParam String reqId) {
-        User userById = serivce.getUserById(reqId);
-        return userById;
+    public RedisUser getUser(@RequestParam String reqId) {
+        RedisUser redisUserById = serivce.getUserById(reqId);
+        return redisUserById;
     }
 
     // List For Post
     @PostMapping("/redis/v1/list/post")
-    public User postForList(@RequestBody User user) {
-        User result = serivce.postForList(user);
+    public RedisUser postForList(@RequestBody RedisUser redisUser) {
+        RedisUser result = serivce.postForList(redisUser);
         return result;
     }
 

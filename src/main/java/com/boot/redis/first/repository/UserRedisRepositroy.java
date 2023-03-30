@@ -1,6 +1,6 @@
 package com.boot.redis.first.repository;
 
-import com.boot.redis.first.domain.User;
+import com.boot.redis.first.domain.RedisUser;
 import org.springframework.data.repository.CrudRepository;
 
 /************
@@ -11,5 +11,5 @@ import org.springframework.data.repository.CrudRepository;
  * @version : 1.0.0
  * @Description : Spring Data JPA 와 같은 방법.
  ************/
-public interface UserRedisRepositroy extends CrudRepository<User, String> {
+public interface UserRedisRepositroy extends CrudRepository<RedisUser, String> {
 }

@@ -1,6 +1,6 @@
 package com.boot.redis.first.service;
 
-import com.boot.redis.first.domain.User;
+import com.boot.redis.first.domain.RedisUser;
 import com.boot.redis.first.repository.UserRedisRepositroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserSerivce {
+public class FirstUserSerivce {
 
     private final UserRedisRepositroy repository;
 
@@ -33,12 +33,12 @@ public class UserSerivce {
      * @Description :
      */
     @Transactional
-    public User addUser(User user) {
+    public RedisUser addUser(RedisUser redisUser) {
         // save
-        User save = repository.save(user);
+        RedisUser save = repository.save(redisUser);
 
         // find
-        Optional<User> result = repository.findById(save.getId());
+        Optional<RedisUser> result = repository.findById(save.getId());
 
         // Handling
         if(result.isPresent()) {
@@ -56,8 +56,8 @@ public class UserSerivce {
      * @return
      */
     @Transactional(readOnly = true)
-    public User getUserById(String reqId) {
-        Optional<User> result = repository.findById(reqId);
+    public RedisUser getUserById(String reqId) {
+        Optional<RedisUser> result = repository.findById(reqId);
 
         // Handling
         if(result.isPresent()) {
@@ -66,11 +66,11 @@ public class UserSerivce {
     }
 
     // List 포함된 POst
-    public User postForList(User user) {
-        User save = repository.save(user);
+    public RedisUser postForList(RedisUser redisUser) {
+        RedisUser save = repository.save(redisUser);
 
         // find
-        Optional<User> result = repository.findById(user.getId());
+        Optional<RedisUser> result = repository.findById(redisUser.getId());
 
         if(result.isPresent()){
             return result.get();

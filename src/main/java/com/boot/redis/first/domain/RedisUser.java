@@ -4,15 +4,13 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import java.util.List;
-
 @RedisHash("user")
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class RedisUser {
 
     @Id
     private String id; // userId: 입력안하면 임의의 값 생성됨.
