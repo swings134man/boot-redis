@@ -22,6 +22,7 @@ import java.util.Optional;
 public class SeService {
 
     private final SeRepository repository; // RedisRepository
+    private final SeDAO dao; //RedisTemplate
 
 //    private final
 
@@ -41,6 +42,7 @@ public class SeService {
         return save;
     }//save
 
+    // Token 조회 - 간단(RedisRepository)
     @Transactional(readOnly = true)
     public Tokens getToken(String id) {
         Optional<Tokens> byId = repository.findById(id);
@@ -50,6 +52,12 @@ public class SeService {
         }else {
             throw new RuntimeException("No DATA");
         }
+    }// 조회
+
+
+    // RedisTemplate - Token save
+    public void templatesSave(Tokens tokens) {
+        dao.saveToken(tokens);
     }
 
 }

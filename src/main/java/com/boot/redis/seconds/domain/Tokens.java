@@ -14,7 +14,7 @@ import org.springframework.data.redis.core.RedisHash;
  * @version : 1.0.0
  * @Description : Expire Test
  ************/
-@RedisHash(value = "tokens", timeToLive = 20)
+@RedisHash(value = "tokens", timeToLive = 30)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

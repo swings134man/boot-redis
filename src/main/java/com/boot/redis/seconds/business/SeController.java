@@ -20,7 +20,7 @@ public class SeController {
 
     private final SeService service;
 
-
+    // RedisRepository - 저장
     @PostMapping("/redis/token/v1/save")
     public Tokens saveToken(@RequestBody Tokens tokens) {
         log.info("Controller Request Body = {}", tokens);
@@ -28,7 +28,7 @@ public class SeController {
         Tokens res = service.saveToken(tokens);
         return res;
     }
-
+    // RedisRepository - 조회
     @GetMapping("/redis/token/v1/get")
     public Tokens getToken(@RequestParam String id) {
         log.info("Controller Request Param = {}", id);
@@ -36,4 +36,12 @@ public class SeController {
         Tokens token = service.getToken(id);
         return token;
     }
-}
+
+    //RedisTemplate - save(Tokens)
+    @PostMapping("/redis/token/v1/template/save")
+    public void templateSave(@RequestBody Tokens tokens) {
+        service.templatesSave(tokens);
+    }
+
+
+}//class
