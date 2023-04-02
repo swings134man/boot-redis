@@ -16,6 +16,9 @@ public class BoardDTO {
     private String content;
     private String writer;
 
+    private String createdDate;
+    private String modifiedDate;
+
     // to Entity
     public Board toEntity(BoardDTO in) {
         Board board = new Board();
@@ -24,5 +27,6 @@ public class BoardDTO {
         board.setWriter(in.writer);
         return board;
     }
+
 
 }

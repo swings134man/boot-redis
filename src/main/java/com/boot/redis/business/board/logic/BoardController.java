@@ -29,6 +29,13 @@ public class BoardController {
         return boardDTO;
     }
 
+    // update
+    @PutMapping("/board/v1/update")
+    public BoardDTO updateBoard(@RequestBody BoardDTO inDTO) {
+        BoardDTO boardDTO = service.updateBoard(inDTO);
+        return boardDTO;
+    }
+
     // findAll
     @GetMapping("/board/v1/findAll")
     public List<BoardDTO> findAllPost() {
@@ -44,4 +51,10 @@ public class BoardController {
         return byPostId;
     }
 
+    // delete
+    @DeleteMapping("/board/v1/delete")
+    public boolean deleteBoard(Long id) {
+        boolean res = service.deleteBoard(id);
+        return res;
+    }
 }//class
