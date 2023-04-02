@@ -1,10 +1,9 @@
 package com.boot.redis.user.service;
 
+import com.boot.redis.user.domain.User;
+import com.boot.redis.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /************
@@ -18,12 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserService implements UserDetailsService {
+public class UserService  {
 
-    // Security 에서 사용하기 위한 METHOD
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //TODO : ID 혹은 Email로 조회 후 return.
-        return null;
+    private final UserJpaRepository repository;
+
+    // name으로 member 조회
+    public User findByWriter(String name) {
+        User result = repository.findByName(name);
+        return result;
     }
+
 }

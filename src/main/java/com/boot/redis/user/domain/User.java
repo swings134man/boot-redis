@@ -1,5 +1,8 @@
 package com.boot.redis.user.domain;
 
+import com.boot.redis.business.board.domain.Board;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +33,8 @@ import java.util.stream.Collectors;
 // implements UserDetails
 public class User  {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     private String email;
@@ -39,8 +43,16 @@ public class User  {
 
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles = new ArrayList<>();
+
+    // Board
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference
+    private List<Board> boards = new ArrayList<>();
+
+
+
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    private List<String> roles = new ArrayList<>();
 
     // Security 적용시.
     // 권한 목록

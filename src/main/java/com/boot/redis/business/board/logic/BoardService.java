@@ -2,6 +2,8 @@ package com.boot.redis.business.board.logic;
 
 import com.boot.redis.business.board.domain.Board;
 import com.boot.redis.business.board.domain.BoardDTO;
+import com.boot.redis.user.domain.User;
+import com.boot.redis.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -29,13 +31,17 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BoardService {
 
+    private final UserService userService;
     private final BoardJpaReposittory repository;
     private final ModelMapper modelMapper;
 
     // save
     @Transactional
     public BoardDTO saveBoard(BoardDTO inDTO) {
+        User userEntity = userService.findByWriter(inDTO.getWriter());
+
         Board board = inDTO.toEntity(inDTO); //Entity
+        board.setUser(userEntity);
 
         Board save = repository.save(board);
 

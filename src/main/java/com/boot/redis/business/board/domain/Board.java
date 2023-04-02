@@ -1,6 +1,9 @@
 package com.boot.redis.business.board.domain;
 
 import com.boot.redis.config.BaseTimeEntity;
+import com.boot.redis.user.domain.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,11 +24,17 @@ import javax.persistence.*;
 public class Board extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "board_id")
     private Long id;
 
     private String title; //제목
     @Column(columnDefinition = "TEXT")
     private String content; // 내용
-    private String writer; //작성자
+    private String writer; //작성자 ID
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonManagedReference
+    private User user;
 }
