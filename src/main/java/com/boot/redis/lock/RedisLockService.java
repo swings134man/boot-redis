@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
  * @author : SeokJun Kang(swings134@gmail.com)
  * @version : 1.0.0
  * @Description : Redis Lock 테스트 설정을 위한 Service 클래스.
+ *
+ * -- Lettuce Spin Lock 방식?
  ************/
 @Service
 @RequiredArgsConstructor
@@ -41,7 +43,7 @@ public class RedisLockService {
     /**
      * Lock 획득 실패시 - 재시도
      *
-     * @return
+     * @return boolean = false
      */
     public boolean acquireLockRetry(String lockKey, String requestId, long expireTime) {
         int retryCount = 0;
