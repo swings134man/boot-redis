@@ -32,14 +32,20 @@ class TestRedisServiceTest {
         for (int i = 0; i < threadCount; i++) {
             excutor.execute(() -> {
                 String requestId = UUID.randomUUID().toString();
+
                 // 1. Lock 획득 시도
                 boolean isLock = redisLockService.acquireLock(lockKey, requestId, expireTime);
                 if(isLock){
                     this.runLock(lockKey, requestId);
                 }else {
                     System.out.println("Redis Lock 획득 실패!" + Thread.currentThread().getName());
-                    boolean retryLock = redisLockService.acquireLockRetry(lockKey, requestId, expireTime);
-                    if(retryLock) {
+
+                    boolean retryLock = true;
+                    while(retryLock) {
+                        retryLock = redisLockService.acquireLockRetry(lockKey, requestId, expireTime);
+                    }
+
+                    if(!retryLock) { // false 일때 RUN
                         this.runLock(lockKey, requestId);
                     }
                 }

@@ -45,15 +45,16 @@ public class RedisLockService {
      */
     public boolean acquireLockRetry(String lockKey, String requestId, long expireTime) {
         int retryCount = 0;
-        int maxRetryCount = 3;
+        int maxRetryCount = 10;
         boolean isLock = false;
 
         while(!isLock && retryCount < maxRetryCount){
             isLock = this.acquireLock(lockKey, requestId, expireTime);
 
-            if(isLock) {
+            if(!isLock) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(500);
+                    System.out.println("재시도!!!!!!!!!!!!! " + Thread.currentThread().getName());
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -62,7 +63,7 @@ public class RedisLockService {
             retryCount ++;
         }
 
-        return isLock;
+        return !isLock;
     }
 
 }
