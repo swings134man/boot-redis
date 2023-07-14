@@ -21,6 +21,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //jpa
     runtimeOnly 'com.mysql:mysql-connector-j' //mysql
+    implementation("org.mariadb.jdbc:mariadb-java-client:2.1.2") //mariaDB
     implementation 'org.springframework.boot:spring-boot-starter-web' //web
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' //thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-security' //security
