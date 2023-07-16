@@ -12,8 +12,11 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -46,7 +49,8 @@ public class RedisRepositoryConfig {
         RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());   //connection
         redisTemplate.setKeySerializer(new StringRedisSerializer());    // key
-        redisTemplate.setValueSerializer(new StringRedisSerializer());  // value
+//        redisTemplate.setValueSerializer(new StringRedisSerializer());  // value
+        redisTemplate.setKeySerializer(new Jackson2JsonRedisSerializer<>(String.class));
         return redisTemplate;
     }
 
@@ -62,5 +66,23 @@ public class RedisRepositoryConfig {
                 .entryTtl(Duration.ofMinutes(1)); // 캐시 수명 1분
         builder.cacheDefaults(configuration);
         return builder.build();
+    }
+
+    /**
+     * Redis pub/sub 메시지 처리 Listener
+     */
+    @Bean
+    public RedisMessageListenerContainer redisMessageListener() {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory());
+        return container;
+    }
+
+    /**
+     * Redis pub/sub 메시지 처리 Topic
+     */
+    @Bean
+    ChannelTopic topic() {
+        return new ChannelTopic("chatroom");
     }
 }
