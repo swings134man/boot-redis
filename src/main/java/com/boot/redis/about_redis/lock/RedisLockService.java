@@ -1,4 +1,4 @@
-package com.boot.redis.lock;
+package com.boot.redis.about_redis.lock;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
