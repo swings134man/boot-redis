@@ -3,9 +3,12 @@ package com.boot.redis.business.board.logic;
 import com.boot.redis.business.board.domain.BoardDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /************
  * @info : Board Controller
@@ -56,5 +59,11 @@ public class BoardController {
     public boolean deleteBoard(Long id) {
         boolean res = service.deleteBoard(id);
         return res;
+    }
+
+    @PostMapping("/board/v1/asyncTest")
+    public ResponseEntity<CompletableFuture<String>> asyncTest(@RequestBody BoardDTO dto) throws InterruptedException {
+        CompletableFuture<String> res = service.asyncInsertTest(dto);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }//class

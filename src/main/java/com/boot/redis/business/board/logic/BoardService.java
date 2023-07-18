@@ -11,11 +11,14 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /************
@@ -102,4 +105,32 @@ public class BoardService {
         repository.delete(board);
         return true;
     }
+
+    /**
+     * Async Test 메서드
+     */
+    @Async("asyncThread")
+    public CompletableFuture<String> asyncInsertTest(BoardDTO inDTO){
+
+        log.info("Async Thread = {}", Thread.currentThread().getName()); //async-thread-1
+
+        CompletableFuture<String> res = CompletableFuture.supplyAsync(() -> {
+            String out = "OK";
+            log.info("Async Thread = {}", Thread.currentThread().getName()); // ForkJoinPool.commonPool-worker-1
+            try {
+                Thread.sleep(10000);
+                User userEntity = userService.findByWriter(inDTO.getWriter());
+                Board board = inDTO.toEntity(inDTO); //Entity
+                board.setUser(userEntity);
+                repository.save(board);
+                return out;
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return res;
+    }
+
+
 }
