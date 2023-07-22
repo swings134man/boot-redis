@@ -1,5 +1,8 @@
 package com.boot.redis.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
@@ -11,6 +14,8 @@ import java.util.concurrent.Executor;
 @Configuration
 @EnableAsync
 public class AsyncConfig extends AsyncConfigurerSupport {
+
+    private final Logger logger = LoggerFactory.getLogger(AsyncConfig.class);
 
     @Bean(name = "asyncThread")
     @Override
@@ -24,4 +29,13 @@ public class AsyncConfig extends AsyncConfigurerSupport {
         return executor;
     }
 
+    // Async Exception 처리
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return (ex, method, params) -> {
+            logger.error("Async Exception: {}", ex.getMessage());
+            logger.error("Async Exception Method: {}", method.getName());
+            ex.printStackTrace();
+        };
+    }
 }
