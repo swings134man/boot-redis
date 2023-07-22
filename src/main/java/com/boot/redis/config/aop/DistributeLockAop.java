@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class DistributeLockAop {
 
-    private final RedisTemplate template;
+//    private final RedisTemplate template;
     private final RedisLockService service;
 
 
@@ -34,9 +34,7 @@ public class DistributeLockAop {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         DistributeLock annotation = method.getAnnotation(DistributeLock.class);
-
 //        service.acquireLock()
-
 
         return null;
     }
@@ -49,10 +47,10 @@ public class DistributeLockAop {
      * - param + Obj 부분 수정 해야함.
      */
     private void updateResponseMsgToSSO(String message, String responseMessage) {
-        try {
-            ObjectMapper ob = new ObjectMapper();
-            RedisCommandFactory factory = new RedisCommandFactory((StatefulConnection<?, ?>) template.getConnectionFactory());
-            CustomCommands commands = factory.getCommands(CustomCommands.class); // Lua Script
+//        try {
+//            ObjectMapper ob = new ObjectMapper();
+//            RedisCommandFactory factory = new RedisCommandFactory((StatefulConnection<?, ?>) template.getConnectionFactory());
+//            CustomCommands commands = factory.getCommands(CustomCommands.class); // Lua Script
 
             // FIXME Logic Start ...
 //            Object obj = commands.fcall_responseJob(
@@ -63,10 +61,10 @@ public class DistributeLockAop {
 //                    message.getReferenceNumber().getBytes(StandardCharsets.UTF_8),
 //                    message.getTyp().getBytes(StandardCharsets.UTF_8),
 //                    ob.writeValueAsBytes(responseMessage));
-        }catch (Exception e){
-            log.error("Redis Lua Script error : {}", e.getMessage());
-            e.printStackTrace();
-        }
+//        }catch (Exception e){
+//            log.error("Redis Lua Script error : {}", e.getMessage());
+//            e.printStackTrace();
+//        }
     }
 
 }
