@@ -15,7 +15,7 @@ public class TaskHistoryService {
 
     private final TaskHistoryJpaRepository repository;
 
-    public void save(String taskName, String taskType, boolean taskStatus, String taskAdminId) {
+    public void save(String taskName, String taskType, String taskStatus, String taskAdminId) {
         TaskHistory taskHistory = new TaskHistory();
         taskHistory.setTaskName(taskName);
         taskHistory.setTaskType(taskType);
@@ -38,7 +38,7 @@ public class TaskHistoryService {
                 log.warn("2. Async 작업 중 -> {}", Thread.currentThread().getName()); // ForkJoinPool.commonPool-worker-1
                 taskHistory.setTaskName(taskName);
                 taskHistory.setTaskType("C");
-                taskHistory.setTaskStatus(true);
+                taskHistory.setTaskStatus("Y");
                 taskHistory.setTaskAdminId("admin");
 
                 repository.save(taskHistory);
@@ -46,7 +46,7 @@ public class TaskHistoryService {
                 e.printStackTrace();
                 taskHistory.setTaskName(taskName);
                 taskHistory.setTaskType("C");
-                taskHistory.setTaskStatus(false);
+                taskHistory.setTaskStatus("N");
                 taskHistory.setTaskAdminId("admin");
 
                 repository.save(taskHistory);
