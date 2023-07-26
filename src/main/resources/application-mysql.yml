@@ -1,4 +1,4 @@
-# Redis Config
+# Redis Config -> HOME
 spring:
 
   config:
