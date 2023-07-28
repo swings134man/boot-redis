@@ -1,6 +1,7 @@
 package com.boot.redis.business.board.logic;
 
 import com.boot.redis.business.board.domain.BoardDTO;
+import com.boot.redis.config.annotation.ActionMapping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class BoardController {
 
     // save
     @PostMapping("/board/v1/save")
+    @ActionMapping
     public BoardDTO saveBoard(@RequestBody BoardDTO dto) {
         BoardDTO boardDTO = service.saveBoard(dto);
         return boardDTO;

@@ -2,7 +2,7 @@
 spring:
 
   profiles:
-    active: mariadb
+    active: mysql
 
 #  cache:
 #    type: redis
