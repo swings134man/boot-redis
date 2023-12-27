@@ -42,7 +42,6 @@ public class RedisRepositoryConfig {
 
     private final RedisProperties redisProperties;
 
-    private final RedisTemplate<String, Object> redisTemplate;
 
     // lettuce
     @Bean
