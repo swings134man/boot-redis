@@ -1,8 +1,7 @@
 # Redis Config
 spring:
-
   profiles:
-    active: mysql
+    active: mariadb
 
 #  cache:
 #    type: redis
