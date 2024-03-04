@@ -50,6 +50,7 @@ public class BoardController {
 
     // findById
     @GetMapping("/board/v1/findById")
+    @ActionMapping
     public BoardDTO findByBoardId(@RequestParam Long id) {
         log.info("Requset Id {} ", id);
         BoardDTO byPostId = service.findByPostId(id);
