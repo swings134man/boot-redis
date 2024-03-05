@@ -48,22 +48,27 @@ public class ApiKeyFilterTest implements Filter {
             return;
         }else {
             openApi = openApiService.getApiKey(reqApiKey);
-        }
 
-        LocalDate exprDate = LocalDate.parse(openApi.getApiMngrExprDate(), formatter);
-        LocalDate today = LocalDate.now();
-
-
-        if(reqApiKey.equals(openApi.getApiKey()) ) {
-            if(today.isAfter(exprDate)) {
-                httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "API Key is expired");
+            if(openApi == null) {
+                httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid API Key");
                 return;
             }
-            filterChain.doFilter(servletRequest, servletResponse);
-        } else {
-//            httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid API Key");
-            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            LocalDate exprDate = LocalDate.parse(openApi.getApiMngrExprDate(), formatter);
+            LocalDate today = LocalDate.now();
+
+            if(reqApiKey.equals(openApi.getApiKey()) ) {
+                if(today.isAfter(exprDate)) {
+                    httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "API Key is expired");
+                    return;
+                }
+
+                filterChain.doFilter(servletRequest, servletResponse);
+            } else {
+                httpResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST, "Is not Correct API Key");
+            }
         }
+
 
         log.info("Filter END");
     }
