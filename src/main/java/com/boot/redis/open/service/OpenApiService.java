@@ -1,5 +1,6 @@
 package com.boot.redis.open.service;
 
+import com.boot.redis.config.util.RandomStringGen;
 import com.boot.redis.open.OpenApi;
 import com.boot.redis.open.repository.OpenApiRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +14,21 @@ public class OpenApiService {
 
     private final OpenApiRepository openApiRepository;
 
+    // API KEY - GET
     public OpenApi getApiKey(String apiKey) {
         log.info("API Key (service): {}", apiKey);
         return openApiRepository.findByApiKey(apiKey);
+    }
+
+    public String genKey() {
+        return genApiKey();
+    }
+
+
+
+    private String genApiKey() {
+        RandomStringGen randomStringGen = new RandomStringGen();
+        return randomStringGen.generateRandomKey();
     }
 
 }
