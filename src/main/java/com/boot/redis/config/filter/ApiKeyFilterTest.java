@@ -44,7 +44,7 @@ public class ApiKeyFilterTest implements Filter {
         String reqApiKey = httpRequest.getHeader(API_KEY_HEADER);
 
         if(reqApiKey == null || reqApiKey.isEmpty()) {
-            httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "API Key is missing");
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "API Key is missing");
             return;
         }else {
             openApi = openApiService.getApiKey(reqApiKey);
@@ -59,13 +59,13 @@ public class ApiKeyFilterTest implements Filter {
 
             if(reqApiKey.equals(openApi.getApiKey()) ) {
                 if(today.isAfter(exprDate)) {
-                    httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "API Key is expired");
+                    httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "API Key is expired");
                     return;
                 }
 
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
-                httpResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST, "Is not Correct API Key");
+                httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN, "Is not Correct API Key");
             }
         }
 
