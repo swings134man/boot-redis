@@ -5,6 +5,7 @@ import com.boot.redis.open.OpenApi;
 import com.boot.redis.open.repository.OpenApiRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,8 +28,9 @@ public class OpenApiService {
 
 
     private String genApiKey() {
-        RandomStringGen randomStringGen = new RandomStringGen();
-        return randomStringGen.generateRandomKey();
+//        RandomStringGen randomStringGen = new RandomStringGen();
+//        return randomStringGen.generateRandomKey();
+        return RandomStringUtils.randomAlphanumeric(20); // Eng(Upper, Lower) + Number
     }
 
 }
