@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/open")
+@RequestMapping("/api")
 public class OpenApiController {
 
     private final OpenApiService openApiService;
 
-    @RequestMapping(value = "/v1/test", produces = "application/json", method = {RequestMethod.GET})
+    @RequestMapping(value = "open/v1/test", produces = "application/json", method = {RequestMethod.GET})
     public String test(@RequestParam(required = false, name = "name") String name) {
         log.info("Request Name : {}", name);
         return name;
     }
 
-    @RequestMapping(value = "/v1/keyGen", produces = "application/json", method = {RequestMethod.GET})
+    @RequestMapping(value = "open/v1/keyGen", produces = "application/json", method = {RequestMethod.GET})
     public String keyGen() {
         return openApiService.genKey();
     }
