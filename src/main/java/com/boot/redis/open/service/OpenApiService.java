@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +29,14 @@ public class OpenApiService {
     }
 
 
+    @Transactional
+    public void reissueKey(Long id) {
+        int result = openApiRepository.reissueApiKey(id, genApiKey());
+
+        if(result <= 0) {
+            throw new RuntimeException("API KEY 재발급에 실패하였습니다. id=" + id);
+        }
+    }
 
     private String genApiKey() {
 //        RandomStringGen randomStringGen = new RandomStringGen();
