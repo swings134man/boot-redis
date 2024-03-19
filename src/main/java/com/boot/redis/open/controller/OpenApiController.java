@@ -1,5 +1,6 @@
 package com.boot.redis.open.controller;
 
+import com.boot.redis.config.annotation.ActionMapping;
 import com.boot.redis.open.service.OpenApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ public class OpenApiController {
     private final OpenApiService openApiService;
 
     @RequestMapping(value = "open/v1/test", produces = "application/json", method = {RequestMethod.GET})
+    @ActionMapping
     public String test(@RequestParam(required = false, name = "name") String name) {
         log.info("Request Name : {}", name);
         return name;
