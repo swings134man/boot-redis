@@ -31,6 +31,8 @@ public class FirstUserSerivce {
     private final RedisTemplate redisTemplate;
     private final StringRedisTemplate stringRedisTemplate;
 
+    private final String OTP_PREFIX = "OTP:";
+
     /**
      * @info    : Redis - save (User)
      * @name    : addUser
@@ -93,7 +95,7 @@ public class FirstUserSerivce {
      * @return
      */
     public String requestOtp(String userId) {
-        stringRedisTemplate.opsForValue().set(userId, genOtpKey(), 3 * 60, TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().set(OTP_PREFIX + userId, genOtpKey(), 3 * 60, TimeUnit.SECONDS);
 
         log.info("Temporay Password set : {}", redisTemplate.opsForValue().get(userId));
 
@@ -103,8 +105,11 @@ public class FirstUserSerivce {
 
     public String checkOtp(String id, String otp) {
 
-        if(redisTemplate.hasKey(id)){
-            String value = (String)redisTemplate.opsForValue().get(id);
+        String target = OTP_PREFIX + id;
+        log.info("target : {}", target);
+
+        if(redisTemplate.hasKey(OTP_PREFIX + id)){
+            String value = stringRedisTemplate.opsForValue().get(target);
 
             log.info("value : {}", value);
 
