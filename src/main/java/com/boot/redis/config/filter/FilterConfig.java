@@ -19,20 +19,11 @@ public class FilterConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public FilterRegistrationBean<ApiKeyFilterTest> filterBean(ApiKeyFilterTest apiKeyFilterTest) {
-        FilterRegistrationBean<ApiKeyFilterTest> filterRegBean = new FilterRegistrationBean();
-        filterRegBean.setFilter(apiKeyFilterTest);
-        filterRegBean.addUrlPatterns("/api/open/*");
-
-        return filterRegBean;
-    }
-
-    @Bean
     public FilterRegistrationBean apiFilter() {
         FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
         filterRegBean.setFilter(new ApiKeyFilter(openApiService));
         List<String> urlPatterns = new ArrayList<>();
-        urlPatterns.add("/board/v1/*");
+        filterRegBean.addUrlPatterns("/api/open/*");
         filterRegBean.setUrlPatterns(urlPatterns);
         return filterRegBean;
     }
