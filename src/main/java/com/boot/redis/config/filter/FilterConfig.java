@@ -23,7 +23,7 @@ public class FilterConfig implements WebMvcConfigurer {
         FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
         filterRegBean.setFilter(new ApiKeyFilter(openApiService));
         List<String> urlPatterns = new ArrayList<>();
-        filterRegBean.addUrlPatterns("/api/open/*");
+        urlPatterns.add("/api/open/*");
         filterRegBean.setUrlPatterns(urlPatterns);
         return filterRegBean;
     }

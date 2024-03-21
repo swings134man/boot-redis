@@ -4,10 +4,15 @@ import com.boot.redis.first.domain.RedisUser;
 import com.boot.redis.first.repository.UserRedisRepositroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /************
  * @info : Redis - User Service
@@ -23,6 +28,8 @@ import java.util.Optional;
 public class FirstUserSerivce {
 
     private final UserRedisRepositroy repository;
+    private final RedisTemplate redisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
 
     /**
      * @info    : Redis - save (User)
@@ -77,7 +84,46 @@ public class FirstUserSerivce {
         }else {
             throw new RuntimeException("NO Data");
         }
-
     }
 
+
+    /**
+     * @info : 임시 비밀번호 요청 (OTP)
+     * @param userId
+     * @return
+     */
+    public String requestOtp(String userId) {
+        stringRedisTemplate.opsForValue().set(userId, genOtpKey(), 3 * 60, TimeUnit.SECONDS);
+
+        log.info("Temporay Password set : {}", redisTemplate.opsForValue().get(userId));
+
+        return (String)redisTemplate.opsForValue().get(userId);
+    }
+
+
+    public String checkOtp(String id, String otp) {
+
+        if(redisTemplate.hasKey(id)){
+            String value = (String)redisTemplate.opsForValue().get(id);
+
+            log.info("value : {}", value);
+
+
+            if(value.equals(otp)) {
+                log.info("OTP is Correct");
+                return "SUCCESS";
+            }else {
+                return "FAIL";
+            }
+        }else {
+            return "NO DATA";
+        }
+    }
+
+
+
+    // 임시 비밀번호 생성(OTP)
+    private String genOtpKey() {
+        return RandomStringUtils.randomAlphanumeric(10); // Eng(Upper, Lower) + Number
+    }
 }

@@ -1,5 +1,6 @@
 package com.boot.redis.first.controller;
 
+import com.boot.redis.config.annotation.ActionMapping;
 import com.boot.redis.first.domain.RedisUser;
 import com.boot.redis.first.service.FirstUserSerivce;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,30 @@ public class UserController {
     public RedisUser postForList(@RequestBody RedisUser redisUser) {
         RedisUser result = serivce.postForList(redisUser);
         return result;
+    }
+
+
+    /**
+     * @return
+     * @info : 임시 비밀번호 요청 (OTP)
+     * @name : requestOtp
+     * @date : 2023/03/29 5:47 PM
+     * @author : SeokJun Kang(swings134@gmail.com)
+     * @version : 1.0.0
+     * @Description :
+     */
+    @GetMapping("/redis/v1/requestOtp")
+    @ActionMapping
+    public String requestOtp(@RequestParam(required = true) String userId) {
+
+        return serivce.requestOtp(userId);
+    }
+
+
+    @GetMapping("/redis/v1/checkOtp")
+    @ActionMapping
+    public String checkOtp(@RequestParam(required = true) String userId, @RequestParam(required = true) String otp) {
+        return serivce.checkOtp(userId, otp);
     }
 
 }
