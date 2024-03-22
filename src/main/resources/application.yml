@@ -3,6 +3,11 @@ spring:
   profiles:
     active: mariadb
 
+# swagger3 web.mvc null Pointer Exception solve
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 #  cache:
 #    type: redis
 #  redis:
@@ -30,3 +35,7 @@ spring:
       mode: never
 
 
+springfox:
+  documentation:
+    swagger-ui:
+      base-url: custom
