@@ -23,8 +23,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  ************/
 @Configuration
 @EnableSwagger2
-@EnableWebMvc
 public class SwaggerConfig implements WebMvcConfigurer {
+
+    //http://localhost:8080/custom/swagger-ui/index.html#/
+    //http://localhost:8080//v2/api-docs?group=boot-redis
 
     private static final String SERVICE_NAME = "boot-redis Project";
     private static final String API_VERSION = "V1";
@@ -34,11 +36,12 @@ public class SwaggerConfig implements WebMvcConfigurer {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
+                .apiInfo(apiInfo()).groupName("boot-redis")
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .pathMapping("/custom");
     }
 
     private ApiInfo apiInfo() {
@@ -50,16 +53,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .build();
     }// API INFO
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-        // -- Static resources
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-    }
 
 
 }
