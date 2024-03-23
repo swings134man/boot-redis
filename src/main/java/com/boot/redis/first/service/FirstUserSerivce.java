@@ -103,12 +103,18 @@ public class FirstUserSerivce {
     }
 
 
+    /**
+     * @info : 임시 비밀번호 확인 (OTP)
+     * @param id
+     * @param otp
+     * @return
+     */
     public String checkOtp(String id, String otp) {
 
         String target = OTP_PREFIX + id;
         log.info("target : {}", target);
 
-        if(redisTemplate.hasKey(OTP_PREFIX + id)){
+        if(stringRedisTemplate.hasKey(OTP_PREFIX + id)){
             String value = stringRedisTemplate.opsForValue().get(target);
 
             log.info("value : {}", value);
