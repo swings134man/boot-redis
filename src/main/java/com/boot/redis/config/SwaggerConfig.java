@@ -25,8 +25,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurer {
 
-    //http://localhost:8080/custom/swagger-ui/index.html#/
-    //http://localhost:8080//v2/api-docs?group=boot-redis
+    //http://localhost:8080/swagger-ui/index.html#/
+    //http://localhost:8080/v2/api-docs?group=boot-redis
 
     private static final String SERVICE_NAME = "boot-redis Project";
     private static final String API_VERSION = "V1";
