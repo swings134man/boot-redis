@@ -69,4 +69,10 @@ public class BoardController {
         CompletableFuture<String> res = service.asyncInsertTest(dto);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
+
+    @GetMapping("/board/v1/firstComedIssue")
+    public ResponseEntity<Boolean> firstComedIssue(@RequestParam Long userId) {
+        boolean result = service.eventLimitCnt(userId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }//class
