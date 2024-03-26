@@ -55,17 +55,21 @@ public class RedisRepositoryConfig {
         RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());   //connection
         redisTemplate.setKeySerializer(new StringRedisSerializer());    // key
-//        redisTemplate.setValueSerializer(new StringRedisSerializer());  // value
-        redisTemplate.setKeySerializer(new Jackson2JsonRedisSerializer<>(String.class));
+        redisTemplate.setValueSerializer(new StringRedisSerializer());  // value
+//        redisTemplate.setKeySerializer(new Jackson2JsonRedisSerializer<>(String.class)); Java Obj <-> JSON -> String KEY
         return redisTemplate;
     }
 
-    @Bean
-    public StringRedisTemplate stringRedisTemplate() {
-        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
-        stringRedisTemplate.setConnectionFactory(redisConnectionFactory());
-        return stringRedisTemplate;
-    }
+    /**
+     * @Deprecated
+     * StringRedisTemplate -> redisTemplate의 설정이 존재하기 때문에 삭제 가능
+     */
+//    @Bean
+//    public StringRedisTemplate stringRedisTemplate() {
+//        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
+//        stringRedisTemplate.setConnectionFactory(redisConnectionFactory());
+//        return stringRedisTemplate;
+//    }
 
     // Redis Cache
     @Bean

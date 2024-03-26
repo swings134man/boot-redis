@@ -114,8 +114,8 @@ public class FirstUserSerivce {
         String target = OTP_PREFIX + id;
         log.info("target : {}", target);
 
-        if(stringRedisTemplate.hasKey(OTP_PREFIX + id)){
-            String value = stringRedisTemplate.opsForValue().get(target);
+        if(redisTemplate.hasKey(OTP_PREFIX + id)){
+            String value = (String)redisTemplate.opsForValue().get(target);
 
             log.info("value : {}", value);
 
