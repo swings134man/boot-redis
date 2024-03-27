@@ -29,6 +29,7 @@ public class RedisPublisher {
 
     /**
      * 문자열 publish
+     * TODO: Redis Config 에서 setValueSerializer (String) 설정시 Exception
      */
     public void publish(ChannelTopic topic, MessageDto dto) {
         template.convertAndSend(topic.getTopic(), dto);
