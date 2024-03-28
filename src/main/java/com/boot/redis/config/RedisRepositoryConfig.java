@@ -125,11 +125,13 @@ public class RedisRepositoryConfig {
         return container;
     }
 
+
     /**
+     * @Deprecated
      * Redis pub/sub 메시지 처리 Topic
      */
-    @Bean
-    ChannelTopic topic() {
-        return new ChannelTopic("chatroom");
-    }
+//    @Bean
+//    ChannelTopic topic() {
+//        return new ChannelTopic("chatroom");
+//    }
 }
