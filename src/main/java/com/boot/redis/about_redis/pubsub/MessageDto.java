@@ -13,7 +13,7 @@ public class MessageDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public String message;
-    public String sender;
-    public String roomId;
+    private String message;
+    private String sender;
+    private String roomId;
 }

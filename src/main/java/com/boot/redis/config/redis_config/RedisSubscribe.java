@@ -37,9 +37,10 @@ public class RedisSubscribe implements MessageListener {
             String publishMessage = template
                     .getStringSerializer().deserialize(message.getBody());
             log.info("Publish Message : " + publishMessage);
+
             MessageDto messageDto = objectMapper.readValue(publishMessage, MessageDto.class);
+
             log.info("Redis Subscribe Message : " + messageDto.getMessage());
-            template.convertAndSend(messageDto.getRoomId(), messageDto.getMessage());
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
         }

@@ -97,9 +97,9 @@ public class FirstUserSerivce {
     public String requestOtp(String userId) {
         stringRedisTemplate.opsForValue().set(OTP_PREFIX + userId, genOtpKey(), 3 * 60, TimeUnit.SECONDS);
 
-        log.info("Temporay Password set : {}", redisTemplate.opsForValue().get(userId));
+        log.info("Temporay Password set : {}", stringRedisTemplate.opsForValue().get(userId));
 
-        return (String)redisTemplate.opsForValue().get(userId);
+        return stringRedisTemplate.opsForValue().get(userId);
     }
 
 
@@ -114,8 +114,8 @@ public class FirstUserSerivce {
         String target = OTP_PREFIX + id;
         log.info("target : {}", target);
 
-        if(redisTemplate.hasKey(OTP_PREFIX + id)){
-            String value = (String)redisTemplate.opsForValue().get(target);
+        if(stringRedisTemplate.hasKey(OTP_PREFIX + id)){
+            String value = stringRedisTemplate.opsForValue().get(target);
 
             log.info("value : {}", value);
 

@@ -50,26 +50,26 @@ public class RedisRepositoryConfig {
         return new LettuceConnectionFactory(redisProperties.getHost(), redisProperties.getPort());
     }
 
+    // redisTemplate: default Value Type = JSON
+    // If you want to use String Type, you can change ValueSerializer to StringRedisSerializer or Use StringRedisTemplate
     @Bean
     public RedisTemplate<?, ?> redisTemplate() {
         RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());   //connection
         redisTemplate.setKeySerializer(new StringRedisSerializer());    // key
-        redisTemplate.setValueSerializer(new StringRedisSerializer());  // value
-//        redisTemplate.setKeySerializer(new Jackson2JsonRedisSerializer<>(String.class)); Java Obj <-> JSON -> String KEY
+//        redisTemplate.setValueSerializer(new StringRedisSerializer());  // value
+//        redisTemplate.setKeySerializer(new Jackson2JsonRedisSerializer<>(String.class)); //Java Obj <-> JSON -> String KEY
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class)); //Java Obj <-> JSON -> String Value
         return redisTemplate;
     }
 
-    /**
-     * @Deprecated
-     * StringRedisTemplate -> redisTemplate의 설정이 존재하기 때문에 삭제 가능
-     */
-//    @Bean
-//    public StringRedisTemplate stringRedisTemplate() {
-//        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
-//        stringRedisTemplate.setConnectionFactory(redisConnectionFactory());
-//        return stringRedisTemplate;
-//    }
+
+    @Bean
+    public StringRedisTemplate stringRedisTemplate() {
+        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
+        stringRedisTemplate.setConnectionFactory(redisConnectionFactory());
+        return stringRedisTemplate;
+    }
 
     // Redis Cache
     @Bean
