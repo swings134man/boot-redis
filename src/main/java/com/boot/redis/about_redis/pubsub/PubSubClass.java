@@ -42,5 +42,16 @@ public class PubSubClass {
     }
 
 
+    @PostMapping("/send-test")
+    public void sendMessageToTest(@RequestBody MessageDto message) {
+        //TODO: Channel 별 Topic 생성, Message 전송은 해당 클래스의 방법대로 가능.
+        // 다만, 각 Channel 별로 Listener를 생성해야 한다.
+        redisMessageListenerContainer.addMessageListener(redisSubscribe, new ChannelTopic("chatroom"));
+
+        //2. Message 전송
+        redisPublisher.publish(new ChannelTopic("testroom"), message);
+        log.info("Message Send~ !!!! => {}", message);
+    }
+
 
 }
