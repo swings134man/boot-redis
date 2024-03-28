@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,7 @@ public class BoardService {
     private final BoardJpaReposittory repository;
     private final ModelMapper modelMapper;
     private final RedisTemplate redisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
 
     private final String FIRST_COMED = "first_comed";
     private final String FIRST_COMED_LIST = "first_comed_list";
@@ -142,18 +144,19 @@ public class BoardService {
 
         if(!redisTemplate.hasKey(FIRST_COMED)){
             // incr Key = String Value(In Redis) -> Redis 내부적으로 정수변환 후 증가 다시 문자열로 저장.
-            redisTemplate.opsForValue().set(FIRST_COMED, "0");
+            redisTemplate.opsForValue().set(FIRST_COMED, 0);
         }
 
-        long count = Long.parseLong(redisTemplate.opsForValue().get(FIRST_COMED).toString());
+        long count = Long.parseLong(stringRedisTemplate.opsForValue().get(FIRST_COMED));
+
 
         if(count < 100) {
             // Redis Count Increase
-            redisTemplate.opsForValue().increment(FIRST_COMED);
+            stringRedisTemplate.opsForValue().increment(FIRST_COMED);
             log.info("Redis Value : {}", redisTemplate.opsForValue().get(FIRST_COMED));
 
             // Redis List Add
-            redisTemplate.opsForList().rightPush(FIRST_COMED_LIST, userId.toString());
+            stringRedisTemplate.opsForList().rightPush(FIRST_COMED_LIST, userId.toString());
         }else {
             return false;
         }
