@@ -32,6 +32,14 @@ public class RedisPubService {
         redisPublisher.publish(new ChannelTopic(channel), message);
     }
 
+    /**
+     * Channel 구독 취소
+     * @param channel
+     */
+    public void cancelSubChannel(String channel) {
+        redisMessageListenerContainer.removeMessageListener(redisSubscribeListener);
+    }
+
 
     /**
      * Channel TEST

@@ -22,10 +22,15 @@ public class RedisPubSubController {
     private final RedisPubService redisSubscribeService;
 
 
-    @PostMapping("/send/")
+    @PostMapping("/send")
     public void sendMessage(@RequestParam(required = true) String channel, @RequestBody MessageDto message) {
         log.info("Redis Pub MSG Channel = {}", channel);
         redisSubscribeService.pubMsgChannel(channel, message);
+    }
+
+    @PostMapping("/cancle")
+    public void cancelSubChannel(@RequestParam String channel) {
+        redisSubscribeService.cancelSubChannel(channel);
     }
 
 
