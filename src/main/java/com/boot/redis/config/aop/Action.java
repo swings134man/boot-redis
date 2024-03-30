@@ -21,7 +21,8 @@ public class Action {
     public void enableAction() {}
 
     // target - All Project Packages
-    @Pointcut("execution(* com.boot.redis..*.*(..))")
+    // 프로메테우스 관련 /actuator 는 제외
+    @Pointcut("execution(* com.boot.redis..*.*(..)) && !execution(* com.boot.redis.config..*.*(..))")
     public void cut() {}
 
     @Before("cut() && enableAction()")
