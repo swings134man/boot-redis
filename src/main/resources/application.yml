@@ -1,14 +1,17 @@
 # Redis Config
 spring:
   profiles:
-    active: mariadb
+    active: mysql
 
 # swagger3 web.mvc null Pointer Exception solve
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-#  cache:
+  main:
+    allow-circular-references: true
+
+  #  cache:
 #    type: redis
 #  redis:
 #    host: localhost
@@ -33,6 +36,14 @@ spring:
   sql:
     init:
       mode: never
+
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
 
 
 #springfox:
