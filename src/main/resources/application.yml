@@ -1,4 +1,9 @@
 # Redis Config
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
 spring:
   profiles:
     active: mysql
