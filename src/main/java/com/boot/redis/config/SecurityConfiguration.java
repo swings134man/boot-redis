@@ -29,6 +29,12 @@ public class SecurityConfiguration {
                 .anyRequest().permitAll() // 모든 요청에 대해 인증을 요구하지 않음
                 .and()
                 .csrf().disable(); // CSRF 보호를 비활성화
+
+        http.headers()
+//                .contentSecurityPolicy("frame-ancestors 'self' https://*.premiumoutlets.co.kr").and()
+                .frameOptions()
+                .deny();
+
         return http.build();
     }
 
