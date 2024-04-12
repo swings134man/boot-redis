@@ -35,6 +35,10 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1' // Jackson
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 
+    // Monitoring - actuator, prometheus, micrometer, grafana
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
 
     // JWT
     implementation("com.auth0:java-jwt:3.16.0") // -> oauth0

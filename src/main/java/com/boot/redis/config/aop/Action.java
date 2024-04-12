@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 @Aspect
 @Component
 @Slf4j
+@Lazy
 public class Action {
 
     // Annotation Location
@@ -19,7 +21,8 @@ public class Action {
     public void enableAction() {}
 
     // target - All Project Packages
-    @Pointcut("execution(* com.boot.redis..*.*(..))")
+    // 프로메테우스 관련 /actuator 는 제외
+    @Pointcut("execution(* com.boot.redis..*.*(..)) && !execution(* com.boot.redis.config..*.*(..))")
     public void cut() {}
 
     @Before("cut() && enableAction()")
