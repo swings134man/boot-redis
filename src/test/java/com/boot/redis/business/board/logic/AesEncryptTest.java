@@ -7,21 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @info : AesEncryptTest
@@ -70,8 +60,17 @@ class AesEncryptTest {
     @DisplayName("최종 암복호화 테스트")
     @Test
     void 암복호화_test() {
+
+        String encrypt = encrypt(testParam);
+
+        String decrypt = decrypt(encrypt);
+
+        Assertions.assertThat(testParam).isEqualTo(decrypt);
+    }
+
+    // Encrypt
+    private String encrypt(String text) {
         // 암호화
-        // need: aesKey, ivKey, Text
         byte[] encrypt = null;
 
         try {
@@ -83,7 +82,7 @@ class AesEncryptTest {
                 c.init(Cipher.ENCRYPT_MODE, keySpec, new IvParameterSpec(iv));
             }
 
-            encrypt = c.doFinal(testParam.getBytes(StandardCharsets.UTF_8));
+            encrypt = c.doFinal(text.getBytes(StandardCharsets.UTF_8));
             encryptedText = new String(Base64.getEncoder().encodeToString(encrypt));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -91,7 +90,10 @@ class AesEncryptTest {
 
         System.out.println("encryptedText(암호화) = " + encryptedText);
 
+        return encryptedText;
+    }
 
+    private String decrypt(String text) {
         // 복호화
         String decrypt = "";
         try {
@@ -102,7 +104,7 @@ class AesEncryptTest {
                 c.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv));
             }
 
-            byte[] byteStr = Base64.getDecoder().decode(encryptedText);
+            byte[] byteStr = Base64.getDecoder().decode(text);
 
             decrypt = new String(c.doFinal(byteStr), StandardCharsets.UTF_8);
         } catch (Exception e) {
@@ -111,6 +113,6 @@ class AesEncryptTest {
 
         System.out.println("decrypt(복호화) = " + decrypt);
 
-        Assertions.assertThat(testParam).isEqualTo(decrypt);
-    }// method
+        return decrypt;
+    }
 }
