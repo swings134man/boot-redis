@@ -40,10 +40,10 @@ public class AesTestApiService {
 
 
     private String encrypt(String arg) throws Exception {
-        return AES256Util.encrypt(AES_KEY, IV, arg);
+        return AES256Util.encryptSafe(AES_KEY, IV, arg);
     }
 
     private String decrypt(String arg) throws Exception {
-        return AES256Util.decrypt(AES_KEY, IV, arg);
+        return AES256Util.decryptSafe(AES_KEY, IV, arg);
     }
 }

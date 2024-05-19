@@ -54,7 +54,7 @@ public class AES256Util {
      * @return
      * @throws Exception
      */
-    public static String encrypt(String aesKey, String ivKey, String txt) throws Exception{
+    private static String encrypt(String aesKey, String ivKey, String txt) throws Exception{
 
         if(txt == null || txt.isEmpty()) {return txt;}
 
@@ -88,7 +88,7 @@ public class AES256Util {
      * @return
      * @throws Exception
      */
-    public static String decrypt(String aesKey, String ivKey, String txt) throws Exception{
+    private static String decrypt(String aesKey, String ivKey, String txt) throws Exception{
 
         if(txt == null || txt.isEmpty()) {return txt;}
 
