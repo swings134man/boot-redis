@@ -1,6 +1,8 @@
 package com.boot.redis.business.board.logic;
 
+import org.aspectj.lang.annotation.Before;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,22 +23,20 @@ import java.util.Base64;
  * @Description :
  *
  */
-@SpringBootTest
 class AesEncryptTest {
 
-    final String trans = "AES/CBC/PKCS5Padding";
-    final String aesKey = "34044627275ea068ee2b3fb642d82d55f609eb04eae6141da282cf7fcf7d58d4";
-    final String ivKey = "3cd65cab914658a746bee2d4d7e2cc4a5d3303f0c6d0e61e14c49c4b1d423f85";
-    final byte[] iv = ivKey.substring(0, 16).getBytes(StandardCharsets.UTF_8);
-    final String testParam = "This is Target Of Encrypt";
+    static final String trans = "AES/ECB/PKCS5Padding";
+    static final String aesKey = "34044627275ea068ee2b3fb642d82d55f609eb04eae6141da282cf7fcf7d58d4";
+    static final String ivKey = "3cd65cab914658a746bee2d4d7e2cc4a5d3303f0c6d0e61e14c49c4b1d423f85";
+    static final byte[] iv = ivKey.substring(0, 16).getBytes(StandardCharsets.UTF_8);
+    static final String testParam = "This is Target Of Encrypt";
 
-    Key keySpec;
-    String encryptedText = "";
+    static Key keySpec;
+    static String encryptedText = "";
 
     @DisplayName("1. KeySpec 정의")
-    @BeforeEach
-    @Test
-    void keyGen() {
+    @BeforeAll
+    static void keyGen() {
         // keySpec 정의
         // need: aesKey
         byte[] keyBytes = new byte[32];
@@ -59,7 +59,7 @@ class AesEncryptTest {
 
     @DisplayName("최종 암복호화 테스트")
     @Test
-    void 암복호화_test() {
+    void run() {
 
         String encrypt = encrypt(testParam);
 
