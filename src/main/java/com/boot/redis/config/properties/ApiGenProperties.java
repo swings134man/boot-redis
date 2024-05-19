@@ -7,11 +7,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "application.config")
+@Getter
 public class ApiGenProperties {
 
     private final Api api = new Api();
-
-    public ApiGenProperties.Api getApi() {return this.api;}
 
     public static class Api {
         @Getter
