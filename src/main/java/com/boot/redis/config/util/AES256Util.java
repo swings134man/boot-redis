@@ -24,7 +24,7 @@ public class AES256Util {
         try{
             key = aesKey;
             iv = ivKey.substring(0, 16).getBytes(StandardCharsets.UTF_8);
-            trans = "AES/ECB/PKCS5Padding";
+            trans = "AES/CBC/PKCS5Padding";
 
             byte[] keyBytes = new byte[32];
             int len = 0;
