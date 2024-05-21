@@ -1,12 +1,9 @@
 package com.boot.redis.business.board.logic;
 
-import org.aspectj.lang.annotation.Before;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -25,7 +22,7 @@ import java.util.Base64;
  */
 class AesEncryptTest {
 
-    static final String trans = "AES/ECB/PKCS5Padding";
+    static final String trans = "AES/CBC/PKCS5Padding";
     static final String aesKey = "34044627275ea068ee2b3fb642d82d55f609eb04eae6141da282cf7fcf7d58d4";
     static final String ivKey = "3cd65cab914658a746bee2d4d7e2cc4a5d3303f0c6d0e61e14c49c4b1d423f85";
     static final byte[] iv = ivKey.substring(0, 16).getBytes(StandardCharsets.UTF_8);
@@ -34,11 +31,10 @@ class AesEncryptTest {
     static Key keySpec;
     static String encryptedText = "";
 
-    @DisplayName("1. KeySpec 정의")
-    @BeforeAll
+//    @DisplayName("1. KeySpec 정의")
+//    @BeforeAll
     static void keyGen() {
         // keySpec 정의
-        // need: aesKey
         byte[] keyBytes = new byte[32];
         int len = 0;
         byte[] b = null;
@@ -60,6 +56,7 @@ class AesEncryptTest {
     @DisplayName("최종 암복호화 테스트")
     @Test
     void run() {
+        keyGen(); // String key, iv 값으로 keySpec 생성
 
         String encrypt = encrypt(testParam);
 
@@ -77,9 +74,9 @@ class AesEncryptTest {
             Cipher c = Cipher.getInstance(trans);
 
             if(trans.equals("AES/ECB/PKCS5Padding")) {
-                c.init(Cipher.ENCRYPT_MODE, keySpec);
+                c.init(Cipher.ENCRYPT_MODE, keySpec); // ECB
             } else {
-                c.init(Cipher.ENCRYPT_MODE, keySpec, new IvParameterSpec(iv));
+                c.init(Cipher.ENCRYPT_MODE, keySpec, new IvParameterSpec(iv)); //CBC
             }
 
             encrypt = c.doFinal(text.getBytes(StandardCharsets.UTF_8));
@@ -99,9 +96,9 @@ class AesEncryptTest {
         try {
             Cipher c = Cipher.getInstance(trans);
             if(trans.equals("AES/ECB/PKCS5Padding")) {
-                c.init(Cipher.DECRYPT_MODE, keySpec);
+                c.init(Cipher.DECRYPT_MODE, keySpec); //ECB
             } else {
-                c.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv));
+                c.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv)); //CBC
             }
 
             byte[] byteStr = Base64.getDecoder().decode(text);
