@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -161,6 +163,13 @@ public class BoardService {
             return false;
         }
         return true;
+    }
+
+    // Excel Download Retrieve
+    public Page<Board> findAllByOrderByCreatedDateDesc(Pageable pageable) {
+        Page<Board> result = repository.findAllByOrderByCreatedDateDesc(pageable);
+        log.info("Pageable Result : {}", result.getContent().size());
+        return result;
     }
 
 
