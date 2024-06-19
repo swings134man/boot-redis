@@ -55,3 +55,17 @@ management:
 #  documentation:
 #    swagger-ui:
 #      base-url: custom
+
+
+api:
+  server:
+    # 서버 접근 허용 IP
+    access-ip-address: 127.0.0.1, ::1, 0:0:0:0:0:0:0:1
+    # api 서버 주소
+    url: http://localhost:8080
+    # api 사용자 아이디
+    user-id: APIUSER
+    # api 사용자 시크릿 키
+    secret-key: 'test'
+    is-file-server: false
+    file-server-url: http://localhost:9090
