@@ -121,22 +121,30 @@ public class BoardController {
         ExcelUtil.downloadExcelToSxssf(excelData, request, response, (sheet) -> {
             AtomicInteger rowIdx = new AtomicInteger();
 
-            Pageable pageable = PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "createdDate"));
-            Page<Board> page = service.findAllByOrderByCreatedDateDesc(pageable);
+            int pageSize = 100;
+            int pageNumber = 0;
+            Page<Board> page;
 
-            for (Board item : page.getContent()) {
-                // 데이터 입력
-                Row row = sheet.createRow(rowIdx.incrementAndGet());
-                int cellCnt = 0;
-                row.createCell(cellCnt++).setCellValue(item.getId());
-                row.createCell(cellCnt++).setCellValue(item.getTitle());
-                row.createCell(cellCnt++).setCellValue(item.getWriter());
-                row.createCell(cellCnt++).setCellValue(item.getContent());
-                row.createCell(cellCnt++).setCellValue(item.getCreatedDate());
-                row.createCell(cellCnt++).setCellValue(item.getModifiedDate());
-//                row.createCell(cellCnt++).setCellValue(formatSafely(LocalDateTime.parse(item.getCreatedDate()), formatter));
-//                row.createCell(cellCnt++).setCellValue(formatSafely(LocalDateTime.parse(item.getModifiedDate()), formatter));
-            }
+            do {
+                PageRequest pr = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "createdDate"));
+                page = service.findAllByOrderByCreatedDateDesc(pr);
+
+                for (Board item : page.getContent()) {
+                    // 데이터 입력
+                    Row row = sheet.createRow(rowIdx.incrementAndGet());
+                    int cellCnt = 0;
+                    row.createCell(cellCnt++).setCellValue(item.getId());
+                    row.createCell(cellCnt++).setCellValue(item.getTitle());
+                    row.createCell(cellCnt++).setCellValue(item.getWriter());
+                    row.createCell(cellCnt++).setCellValue(item.getContent());
+                    row.createCell(cellCnt++).setCellValue(item.getCreatedDate().toString());
+                    row.createCell(cellCnt++).setCellValue(item.getModifiedDate().toString());
+            //          row.createCell(cellCnt++).setCellValue(formatSafely(LocalDateTime.parse(item.getCreatedDate()), formatter));
+            //          row.createCell(cellCnt++).setCellValue(formatSafely(LocalDateTime.parse(item.getModifiedDate()), formatter));
+                }
+
+                pageNumber++;
+            } while (page.hasNext());
         });
     }
 
