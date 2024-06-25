@@ -31,6 +31,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8' // Model mapper
+    implementation group: 'com.kcthota', name: 'version4j', version: '4.0' // version4j
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1' // Jackson
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
