@@ -69,3 +69,7 @@ api:
     secret-key: 'test'
     is-file-server: false
     file-server-url: http://localhost:9090
+
+jasypt:
+  encryptor:
+    password: encryptKeyTestKey

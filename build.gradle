@@ -38,6 +38,7 @@ dependencies {
 //    implementation group: 'org.apache.poi', name: 'poi', version: '4.1.0' // poi
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.5'
 
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'// jasypt
 
 
     // Monitoring - actuator, prometheus, micrometer, grafana
