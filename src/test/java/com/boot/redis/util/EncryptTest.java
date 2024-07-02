@@ -45,4 +45,20 @@ class EncryptTest {
         Assertions.assertThat(decrypt).isEqualTo(targetString);
     }
 
+    @Test
+    @DisplayName("3. Encrypt Util Test - Map Type")
+    void use_3() {
+        Map<String, Object> map = Map.of("id", "this is id", "pw", "this is pw");
+
+        String encrypt = JasyptEncryptUtil.mapToStringEncrypt(map);
+        System.out.println("encrypt = " + encrypt);
+
+        Map<String, Object> decryptRes = JasyptEncryptUtil.mapToStringDecrypt(encrypt);
+        System.out.println("decryptRes = " + decryptRes.toString());
+
+        Assertions.assertThat(decryptRes).isEqualTo(map);
+        if(decryptRes instanceof Map) System.out.println("decryptRes is Map Type");
+
+    }
+
 }
