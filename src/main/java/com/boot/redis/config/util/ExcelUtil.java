@@ -54,8 +54,7 @@ public class ExcelUtil {
             }
 
             // 워크북 생성
-
-            SXSSFWorkbook workbook = new SXSSFWorkbook();
+            SXSSFWorkbook workbook = new SXSSFWorkbook(300); // memory default maintain 100 rows -> just new SXSSFWorkbook()
             // 워크북에 새로운 시트를 생성
             SXSSFSheet sheet = workbook.createSheet(rawFileName);
 
@@ -99,6 +98,8 @@ public class ExcelUtil {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+        }finally {
+            log.info("Excel Download End");
         }
     }
 
