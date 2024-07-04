@@ -1,5 +1,6 @@
 package com.boot.redis.history.business;
 
+import com.boot.redis.config.common.TaskOperationResult;
 import com.boot.redis.history.domain.TaskHistory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,23 +27,26 @@ public class TaskHistoryService {
     }
 
     @Async
-    public CompletableFuture<Object> save(String taskName) throws InterruptedException {
+    public CompletableFuture<TaskOperationResult> save(String taskName) throws InterruptedException {
 
         // ~ Task ~
         log.warn("1. CRUD 작업 중 -> {}", Thread.currentThread().getName()); // async-thread-1
-        Thread.sleep(3000);
 
         TaskHistory taskHistory = new TaskHistory();
-        return CompletableFuture.supplyAsync(() -> {
-            try{
+        CompletableFuture<TaskOperationResult> futureResult = CompletableFuture.supplyAsync(() -> {
+            try {
                 log.warn("2. Async 작업 중 -> {}", Thread.currentThread().getName()); // ForkJoinPool.commonPool-worker-1
+                // ~ Task ~ (비즈니스 로직) 작업
                 taskHistory.setTaskName(taskName);
                 taskHistory.setTaskType("C");
                 taskHistory.setTaskStatus("Y");
                 taskHistory.setTaskAdminId("admin");
 
                 repository.save(taskHistory);
-            }catch (RuntimeException e) {
+
+                return new TaskOperationResult(true, "Success", taskHistory);
+            } catch (RuntimeException e) {
+                // 작업중 에러 발생시
                 e.printStackTrace();
                 taskHistory.setTaskName(taskName);
                 taskHistory.setTaskType("C");
@@ -50,9 +54,11 @@ public class TaskHistoryService {
                 taskHistory.setTaskAdminId("admin");
 
                 repository.save(taskHistory);
-                return null;
+
+                return new TaskOperationResult(false, e.getMessage(), null);
             }
-            return null;
         });
+
+        return futureResult;
     }
 }
