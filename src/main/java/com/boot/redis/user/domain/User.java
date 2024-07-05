@@ -47,6 +47,7 @@ public class User  {
     // Board
     @OneToMany(mappedBy = "user")
     @JsonBackReference
+    @Builder.Default
     private List<Board> boards = new ArrayList<>();
 
 
