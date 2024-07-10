@@ -11,11 +11,9 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -83,6 +81,12 @@ public class BoardController {
     public ResponseEntity<CompletableFuture<String>> asyncTest(@RequestBody BoardDTO dto) throws InterruptedException {
         CompletableFuture<String> res = service.asyncInsertTest(dto);
         return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @GetMapping("/board/v1/withUser")
+    public ResponseEntity<List<Board>> findByBoardWithUser(@RequestParam Long boardId){
+        List<Board> byBoardWithUser = service.findByBoardWithUser(boardId);
+        return new ResponseEntity<>(byBoardWithUser, HttpStatus.OK);
     }
 
     @GetMapping("/board/v1/firstComedIssue")

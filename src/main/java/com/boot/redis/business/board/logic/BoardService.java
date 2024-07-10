@@ -141,6 +141,12 @@ public class BoardService {
         return res;
     }
 
+    public List<Board> findByBoardWithUser(Long id) {
+        List<Board> byBoardWithUser = repository.findBoardByIdWithUser(id);
+        log.info("Board With User : {}", byBoardWithUser);
+        return byBoardWithUser;
+    }
+
     // Redis 선착순 적재
     public boolean eventLimitCnt(Long userId) {
 
