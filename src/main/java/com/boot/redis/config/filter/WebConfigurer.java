@@ -55,7 +55,7 @@ public class WebConfigurer implements WebMvcConfigurer {
         FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
         filterRegBean.setFilter(new RequestCachingFilter());
         List<String> urlPatterns = new ArrayList<>();
-        urlPatterns.add("/api/*");
+        urlPatterns.add("/*");
         filterRegBean.setUrlPatterns(urlPatterns);
         filterRegBean.setOrder(1);
         filterRegBean.setAsyncSupported(true);

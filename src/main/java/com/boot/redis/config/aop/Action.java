@@ -65,8 +65,11 @@ public class Action {
 
         ContentCachingRequestWrapper requestWrapper = (ContentCachingRequestWrapper) request;
 
-        String body = new String(requestWrapper.getContentAsByteArray());
-        log.info("Request Body : {}", body);
+        // byte array 가 0 이상일때.
+        if(requestWrapper.getContentAsByteArray().length > 0){
+            String body = new String(requestWrapper.getContentAsByteArray());
+            log.info("Request Body : {}", body);
+        }
     }
 
     private static HttpServletRequest request() {
