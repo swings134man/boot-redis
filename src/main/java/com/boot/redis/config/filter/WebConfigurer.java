@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-public class FilterConfig implements WebMvcConfigurer {
+public class WebConfigurer implements WebMvcConfigurer {
 
     private final OpenApiService openApiService;
 
-    public FilterConfig(OpenApiService openApiService) {
+    public WebConfigurer(OpenApiService openApiService) {
         this.openApiService = openApiService;
     }
 
@@ -47,6 +47,18 @@ public class FilterConfig implements WebMvcConfigurer {
         List<String> urlPatterns = new ArrayList<>();
         urlPatterns.add("/api/open/*");
         filterRegBean.setUrlPatterns(urlPatterns);
+        return filterRegBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean requestCachingFilter() {
+        FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
+        filterRegBean.setFilter(new RequestCachingFilter());
+        List<String> urlPatterns = new ArrayList<>();
+        urlPatterns.add("/api/*");
+        filterRegBean.setUrlPatterns(urlPatterns);
+        filterRegBean.setOrder(1);
+        filterRegBean.setAsyncSupported(true);
         return filterRegBean;
     }
 

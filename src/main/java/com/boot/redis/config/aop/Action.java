@@ -6,7 +6,12 @@ import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -38,6 +43,8 @@ public class Action {
         if(args.length > 0){
             log.info("Action : {}", method.getName());
             log.info("   -> {} PARAM = {}", method.getName(), Arrays.toString(args));
+
+            loggingRequestBody();
         }else {
             log.info("Method Name : {}", method.getName());
         }
@@ -51,5 +58,18 @@ public class Action {
 
         // Action
         log.info(" AFTER RETURNING  -> {} RETURN = {}", method.getName(), returnObj);
+    }
+
+    private static void loggingRequestBody() {
+        HttpServletRequest request = request();
+
+        ContentCachingRequestWrapper requestWrapper = (ContentCachingRequestWrapper) request;
+
+        String body = new String(requestWrapper.getContentAsByteArray());
+        log.info("Request Body : {}", body);
+    }
+
+    private static HttpServletRequest request() {
+        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
 }
