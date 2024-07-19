@@ -2,6 +2,7 @@ package com.boot.redis.business.board.logic;
 
 import com.boot.redis.business.board.domain.Board;
 import com.boot.redis.business.board.domain.BoardDTO;
+import com.boot.redis.config.annotation.CheckConn;
 import com.boot.redis.user.domain.User;
 import com.boot.redis.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,7 @@ public class BoardService {
 
     // Update
     @Transactional
+    @CheckConn
     @CachePut(value = "BoardDTO", key = "#inDTO.id", cacheManager = "cacheManager", unless = "#id == ''")
     public BoardDTO updateBoard(BoardDTO inDTO) {
         Board entity = repository.findById(inDTO.getId()).orElseThrow(() -> new IllegalArgumentException("해당 Post가 존재하지 않음."));
@@ -80,6 +82,7 @@ public class BoardService {
 
     // findAll
     @Transactional(readOnly = true)
+    @CheckConn
     public List<BoardDTO> findAllPost() {
         List<Board> result = repository.findAll(Sort.by(Sort.Direction.DESC, "id"));//ID 기준 DESC Sort FindALL
 
