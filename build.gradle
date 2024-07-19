@@ -29,6 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis' //redis
     compileOnly 'org.projectlombok:lombok' //lombok
     annotationProcessor 'org.projectlombok:lombok'
+    implementation 'javax.inject:javax.inject:1'
 
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8' // Model mapper
     implementation group: 'com.kcthota', name: 'version4j', version: '4.0' // version4j
