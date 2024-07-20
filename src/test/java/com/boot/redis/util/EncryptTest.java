@@ -61,4 +61,26 @@ class EncryptTest {
 
     }
 
+    @Test
+    @DisplayName("4. DB Pw Encrypt")
+    void use_4() {
+        String targetString = "";
+
+        String encrypt = JasyptEncryptUtil.encrypt(targetString);
+        System.out.println("encrypt = " + encrypt);
+
+        String decrypt = JasyptEncryptUtil.decrypt(encrypt);
+        System.out.println("decrypt = " + decrypt);
+        Assertions.assertThat(decrypt).isEqualTo(targetString);
+    }
+
+    @Test
+    @DisplayName("5. decrypt Test")
+    void use_5() {
+        String encryptKey = "ejoa6pqPy+JT2q9e5HPK9DwgSYcA5gE55CKqPadfPbEr5YHrrvXNfF6jurcT1MaY";
+
+        String decrypt = JasyptEncryptUtil.decrypt(encryptKey);
+        System.out.println("decrypt = " + decrypt);
+    }
+
 }

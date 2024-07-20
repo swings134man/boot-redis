@@ -9,17 +9,17 @@ spring:
   cache:
     type: redis
   redis:
-    host: 192.168.0.18
-    port: 6379
+    host: 192.168.35.135
+    port: 16379
 
 
   # FIXME: private IP host setting
 # MySQL Config
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.0.18:3306/boot_redis?useSSL=false
-    username: root
-    password: 1234
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://192.168.35.135:3360/boot_redis?useSSL=false
+    username: develop
+    password: ENC(ejoa6pqPy+JT2q9e5HPK9DwgSYcA5gE55CKqPadfPbEr5YHrrvXNfF6jurcT1MaY)
 
 application:
   config:

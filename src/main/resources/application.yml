@@ -6,7 +6,7 @@ server:
 
 spring:
   profiles:
-    active: mysql
+    active: proxy
 
 # swagger3 web.mvc null Pointer Exception solve
   mvc:
@@ -36,11 +36,11 @@ spring:
       hibernate:
         format_sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: none #create, update
     defer-datasource-initialization: false
   sql:
     init:
-      mode: never
+      mode: never #always
 
 
 # Actuator
@@ -72,4 +72,4 @@ api:
 
 jasypt:
   encryptor:
-    password: encryptKeyTestKey
+    password: encryptKeyTestKey # TODO: 환경변수 || GitSecretKey 로 숨김 필요.
