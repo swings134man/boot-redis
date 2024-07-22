@@ -12,7 +12,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -63,11 +65,8 @@ public class Action {
     }
 
     private static void loggingRequestBody() throws IOException {
-        HttpServletRequest request = request();
+        ContentCachingRequestWrapper requestWrapper = (ContentCachingRequestWrapper) extractRequest(ContentCachingRequestWrapper.class, request());
 
-        ContentCachingRequestWrapper requestWrapper = (ContentCachingRequestWrapper) request;
-
-        // byte array 가 0 이상일때.
         if(requestWrapper.getContentAsByteArray().length > 0){
             String body = new String(requestWrapper.getContentAsByteArray());
             log.info("Request Body : {}", body);
@@ -81,4 +80,30 @@ public class Action {
     private static HttpServletRequest request() {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
+
+    /**
+     * 이 메서드는 주로 서블릿 필터나 인터셉터에서 원본 HTTP 요청 객체를 처리하거나 검사할 필요가 있을 때 사용됩니다.
+     * 예를 들어, 요청의 바디를 로깅하거나, 요청에 포함된 특정 헤더를 검사하는 등의 작업을 수행하기 위해 원본 HttpServletRequest 객체에 접근해야 할 때 유용합니다.
+     * HttpServletRequestWrapper는 HttpServletRequest를 확장하거나 변경할 때 사용되는데,
+     * 이 메서드는 그러한 확장이나 변경을 거쳐도 원본 요청 객체에 접근할 수 있게 해줍니다.
+     *
+     * ** ?
+     * ServletRequest에서 HttpServletRequest 추출 하여 반환
+     * 만약, request가, HttpServletRequestWrapper 인스턴스라면, 재귀적으로 HttpServletRequest 의 실제 구현체를 찾을때 까지 반복, return
+     * -> 재귀적으로 HttpServletRequestWrapper가 감싸고 있는 HttpServletRequest를 반환
+     * 만약, request 가 HttpServletRequest 또는 그 서브클래스가 아니라면 null 반환
+     * @param requestClass
+     * @param request
+     * @return
+     */
+    private static HttpServletRequest extractRequest(Class<? extends HttpServletRequest> requestClass, ServletRequest request) {
+        if (requestClass.isInstance(request)) {
+            return (HttpServletRequest) request;
+        } else if (request instanceof HttpServletRequestWrapper) {
+            return extractRequest(requestClass, ((HttpServletRequestWrapper) request).getRequest());
+        } else {
+            return null;
+        }
+    }
+
 }
