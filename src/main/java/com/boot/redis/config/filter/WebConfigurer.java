@@ -50,6 +50,7 @@ public class WebConfigurer implements WebMvcConfigurer {
         return filterRegBean;
     }
 
+    //FIXME: Security Filter 보다 먼저 실행되어야 함
     @Bean
     public FilterRegistrationBean requestCachingFilter() {
         FilterRegistrationBean filterRegBean = new FilterRegistrationBean();
