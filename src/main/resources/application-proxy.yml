@@ -11,6 +11,7 @@ spring:
   redis:
     host: 192.168.35.135
     port: 16379
+    password: ENC(qgvqgZmaKShALt4/UXvqLgc98GgeQZyAA93Z3Olj2ZoJRSJxubK2y0xe9q30OcQx)
 
 
   # FIXME: private IP host setting
