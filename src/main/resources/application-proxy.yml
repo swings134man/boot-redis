@@ -9,7 +9,7 @@ spring:
   cache:
     type: redis
   redis:
-    host: 192.168.35.135
+    host: 192.168.45.135
     port: 16379
     password: ENC(qgvqgZmaKShALt4/UXvqLgc98GgeQZyAA93Z3Olj2ZoJRSJxubK2y0xe9q30OcQx)
 
@@ -18,7 +18,7 @@ spring:
 # MySQL Config
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://192.168.35.135:3360/boot_redis?useSSL=false
+    url: jdbc:mariadb://192.168.45.135:3360/boot_redis?useSSL=false
     username: develop
     password: ENC(ejoa6pqPy+JT2q9e5HPK9DwgSYcA5gE55CKqPadfPbEr5YHrrvXNfF6jurcT1MaY)
 

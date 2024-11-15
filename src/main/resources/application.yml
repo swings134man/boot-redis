@@ -43,12 +43,29 @@ spring:
       mode: never #always
 
 
-# Actuator
+# Actuator - 보안설정 Sample
 management:
+  # 1. use Other port for Actuator
+  server:
+    port: 8070
+  # 2. Endpoint All disable
+  enabled-by-default: false
+  # 3. Actuator Endpoints Enable
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
   endpoints:
+    # 4. Exclude All JMX End points And Expose specific endpoints
+    jmx:
+      exposure:
+        exclude: '*'
     web:
       exposure:
-        include: prometheus
+        include: prometheus, info, health
+      # 5. Actuator Base Path -> /actuator to /monitoring
+      base-path: /monitoring
 
 
 #springfox:
