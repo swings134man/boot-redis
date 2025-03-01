@@ -1,0 +1,43 @@
+# Redis Config -> HOME
+spring:
+
+  config:
+    activate:
+      on-profile: local
+
+# Local Redis Config
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379
+    password:
+
+
+# Maria Config - Proxy
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://192.168.45.135:3360/boot_redis?useSSL=false
+    username: develop
+    password: ENC(ejoa6pqPy+JT2q9e5HPK9DwgSYcA5gE55CKqPadfPbEr5YHrrvXNfF6jurcT1MaY)
+
+application:
+  config:
+    api:
+      encrypt-key: 34044627275ea068ee2b3fb642d82d55f609eb04eae6141da282cf7fcf7d58d4
+      iv-key: 3cd65cab914658a746bee2d4d7e2cc4a5d3303f0c6d0e61e14c49c4b1d423f85
+
+
+#  jpa:
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+#    hibernate:
+#      ddl-auto: none
+#    defer-datasource-initialization: false
+#  sql:
+#    init:
+#      mode: never
+
+

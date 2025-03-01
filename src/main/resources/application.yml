@@ -6,7 +6,7 @@ server:
 
 spring:
   profiles:
-    active: proxy
+    active: local
 
 # swagger3 web.mvc null Pointer Exception solve
   mvc:

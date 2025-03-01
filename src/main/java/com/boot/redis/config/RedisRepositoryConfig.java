@@ -46,6 +46,9 @@ public class RedisRepositoryConfig {
     @Value("${spring.redis.password}")
     private String redisPassword;
 
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
+
     private final RedisProperties redisProperties;
 
 
@@ -55,7 +58,10 @@ public class RedisRepositoryConfig {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(redisProperties.getHost());
         config.setPort(redisProperties.getPort());
-        config.setPassword(redisPassword);
+
+        if(!activeProfile.equals("local")) {
+            config.setPassword(redisPassword);
+        }
 
         return new LettuceConnectionFactory(config);
     }
