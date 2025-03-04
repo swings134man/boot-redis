@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class ChatRoomService {
 
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ChatService chatService;
 
     private static final String CHAT_ROOMS_KEY = "CHAT_ROOMS"; // Redis Hash Key
 
@@ -29,6 +30,7 @@ public class ChatRoomService {
     public ChatRoom createRoom(String name) {
         ChatRoom chatRoom = ChatRoom.createRoom(name);
         redisTemplate.opsForHash().put(CHAT_ROOMS_KEY, chatRoom.getRoomId(), chatRoom);
+        chatService.genNewRoom(chatRoom.getRoomId()); // Mem 적재
         return chatRoom;
     }
 
@@ -43,5 +45,13 @@ public class ChatRoomService {
     // 특정 채팅방 찾기
     public ChatRoom findRoomById(String roomId) {
         return (ChatRoom) redisTemplate.opsForHash().get(CHAT_ROOMS_KEY, roomId);
+    }
+
+
+    // 특정 채팅방 삭제
+    public void deleteRoom(String roomId) {
+        chatService.deleteRoom(roomId);
+        redisTemplate.opsForHash().delete(CHAT_ROOMS_KEY, roomId);
+        log.info("Chat Room Deleted IN Redis: {}", roomId);
     }
 }
