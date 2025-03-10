@@ -69,8 +69,18 @@ public class ChatService {
         }
     }
 
-    // exit(unsubscribe) : TODO: Params 에 sessionId 추가(enterRoom 도 마찬가지) STOMP SessionId
+    // exit(unsubscribe)
     public void leaveRoom(String roomId, String sessionId) {
+        ChannelTopic channelTopic = topics.get(roomId);
+        if(channelTopic != null) {
+            // 1. Clients 에게 Leave FLAG 전송으로 DisConnection 하게 함.(Front 제어 필요)
+            MessageDto messageDto = new MessageDto();
+            messageDto.setRoomId(roomId);
+            messageDto.setType("LEAVE");
+            messageDto.setSender(sessionId);
+            messageDto.setMessage(sessionId); // 또는 사용자 이름
+            msgSend(messageDto);
+        }
     }
 
     // send
