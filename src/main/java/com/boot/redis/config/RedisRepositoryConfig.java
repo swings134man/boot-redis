@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.CacheKeyPrefix;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -25,6 +26,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 import java.time.Duration;
 
@@ -40,7 +42,8 @@ import java.time.Duration;
 @Configuration
 @RequiredArgsConstructor
 @EnableRedisRepositories
-@EnableCaching
+@EnableCaching // Caching
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60) // Redis Session: Not Required
 public class RedisRepositoryConfig {
 
     @Value("${spring.redis.password}")
@@ -133,8 +136,10 @@ public class RedisRepositoryConfig {
 
     /**
      * Redis pub/sub 메시지 처리 Listener
+     * - RedisSession 내부에 MessageListenerContainer 를 사용중이므로 {@code @Primary} 설정 필요함.
      */
     @Bean
+    @Primary
     public RedisMessageListenerContainer redisMessageListener() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());

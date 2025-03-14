@@ -12,9 +12,11 @@ spring:
     host: localhost
     port: 6379
     password:
+  session:
+    store-type: redis
+    timeout: 60s
 
-
-# Maria Config - Proxy
+  # Maria Config - Proxy
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://192.168.45.135:3360/boot_redis?useSSL=false

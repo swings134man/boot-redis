@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security' //security
     developmentOnly 'org.springframework.boot:spring-boot-devtools' //devtools
     implementation 'org.springframework.boot:spring-boot-starter-data-redis' //redis
+    implementation 'org.springframework.session:spring-session-data-redis' //redis-session
     implementation 'org.springframework.boot:spring-boot-starter-websocket' // websocket(STOMP)
     compileOnly 'org.projectlombok:lombok' //lombok
     annotationProcessor 'org.projectlombok:lombok'
