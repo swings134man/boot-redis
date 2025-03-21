@@ -30,19 +30,21 @@ public class ChatService {
     public void initTopicsFromRedis() {
         Map<Object, Object> chatRooms = redisTemplate.opsForHash().entries("CHAT_ROOMS");
 
-        for (Object key : chatRooms.keySet()) {
-            String roomId = (String) key;
-            ChannelTopic topic = new ChannelTopic(roomId);
-            topics.put(roomId, topic);
-            redisMessageListenerContainer.addMessageListener(redisSubscribeListener, topic);
-            log.info("🔄 Redis에서 기존 채팅방 복구: {}", roomId);
-        }
+        chatRooms.keySet().stream()
+                .map(key -> (String) key)
+                .forEach(roomId -> {
+                    ChannelTopic topic = new ChannelTopic(roomId);
+                    topics.put(roomId, topic);
+                    redisMessageListenerContainer.addMessageListener(redisSubscribeListener, topic);
+                    log.info("🔄 Redis에서 기존 채팅방 복구: {}", roomId);
+                });
     }
 
 
     // generate New Room(In-Memory)
     public void genNewRoom(String roomId) {
         ChannelTopic channelTopic = topics.get(roomId);
+
         if(channelTopic == null) {
             channelTopic = new ChannelTopic(roomId);
             redisMessageListenerContainer.addMessageListener(redisSubscribeListener, channelTopic);
@@ -55,10 +57,12 @@ public class ChatService {
         ChannelTopic channelTopic = topics.get(roomId);
         if(channelTopic != null) {
             // 1. Clients 에게 Delete FLAG 전송으로 DisConnection 하게 함.(Front 제어 필요)
-            MessageDto messageDto = new MessageDto();
-            messageDto.setRoomId(roomId);
-            messageDto.setType("DELETE");
-            msgSend(messageDto);
+            MessageDto dto = MessageDto.builder()
+                    .roomId(roomId)
+                    .type("DELETE")
+                    .build();
+
+            msgSend(dto);
 
             // 2. Redis Listener 삭제
             redisMessageListenerContainer.removeMessageListener(redisSubscribeListener, channelTopic);
@@ -74,12 +78,7 @@ public class ChatService {
         ChannelTopic channelTopic = topics.get(roomId);
         if(channelTopic != null) {
             // 1. Clients 에게 Leave FLAG 전송으로 DisConnection 하게 함.(Front 제어 필요)
-            MessageDto messageDto = new MessageDto();
-            messageDto.setRoomId(roomId);
-            messageDto.setType("LEAVE");
-            messageDto.setSender(sessionId);
-            messageDto.setMessage(sessionId); // 또는 사용자 이름
-            msgSend(messageDto);
+            msgSend(new MessageDto(sessionId, sessionId, roomId, "LEAVE"));
         }
     }
 
