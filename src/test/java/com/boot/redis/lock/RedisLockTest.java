@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -134,5 +135,82 @@ public class RedisLockTest {
         // Then: 하나의 스레드만 Lock을 획득해야 함
         assertThat(successfulRequestId[0]).isNotNull();
         assertThat(redisTemplate.opsForValue().get("LOCK:" + lockKey)).isEqualTo(successfulRequestId[0]);
+    }
+
+    @Test
+    @DisplayName("Retry - 재시도 획득 테스트 (일정 수량 획득)")
+    void retry_재시도_획득_테스트() throws InterruptedException {
+        // given
+        String lockKey = "test-lock";
+        long expireTime = 5000L; // 5s
+
+        int threadCount = 15;
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        CountDownLatch latch = new CountDownLatch(threadCount);
+
+        AtomicInteger targetCount = new AtomicInteger(0); // 수량
+
+        // when
+        for (int i = 0; i < threadCount; i++) {
+            executorService.execute(() -> {
+                String requestId = UUID.randomUUID().toString();
+                boolean isLock = redisLockService.acquireLockRetry(lockKey, requestId, expireTime);
+
+                if(isLock) {
+                    targetCount.incrementAndGet();
+                    System.out.println("Lock 획득 성공: " + targetCount.get());
+                    redisLockService.releaseLock(lockKey, requestId);
+                }
+
+                latch.countDown();
+            });
+        }
+
+        latch.await();
+
+        // then
+        assertThat(targetCount.get()).isEqualTo(15);
+    }
+
+    @Test
+    @DisplayName("Retry : 한정 수량 만큼만 되는지 확인")
+    void retry_한정수량() throws InterruptedException {
+        // given
+        String lockKey = "test-lock";
+        long expireTime = 5000L; // 5s
+
+        int threadCount = 15;
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        CountDownLatch latch = new CountDownLatch(threadCount);
+
+        AtomicInteger targetCount = new AtomicInteger(15); // 수량
+
+        // when
+        for (int i = 0; i < threadCount; i++) {
+            executorService.execute(() -> {
+                String requestId = UUID.randomUUID().toString();
+                boolean isLock = redisLockService.acquireLockRetry(lockKey, requestId, expireTime);
+
+                if (isLock) {
+                    try {
+                        if (targetCount.get() == 0) {
+                            System.err.println("Count Error");
+                        } else {
+                            targetCount.decrementAndGet();
+                            System.out.println("Lock 획득 성공: " + targetCount.get());
+                        }
+                    } finally {
+                        redisLockService.releaseLock(lockKey, requestId);
+                    }
+                }
+
+                latch.countDown();
+            });
+        }
+
+        latch.await();
+
+        // then
+        assertThat(targetCount.get()).isEqualTo(0);
     }
 }
