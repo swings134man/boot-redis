@@ -11,9 +11,7 @@ import java.util.UUID;
 public @interface DistributeLock {
     String lockKey();
 
-    String requestId = UUID.randomUUID().toString();
-
     long expireTime() default 5000L;
 
-
+    int retryCount() default 20; // Retry Count
 }

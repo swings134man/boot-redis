@@ -14,10 +14,15 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 @Aspect
 @Component
@@ -25,46 +30,49 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class DistributeLockAop {
 
-//    private final RedisTemplate template;
-    private final RedisLockService service;
-
+    private final RedisLockService redisLockService;
 
     @Around("@annotation(com.boot.redis.config.annotation.DistributeLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable{
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
+
+        // 0. SpEL
+        EvaluationContext context = new StandardEvaluationContext();
+        String[] parameterNames = signature.getParameterNames();
+        Object[] args = joinPoint.getArgs();
+
+        for (int i = 0; i < parameterNames.length; i++) {
+            context.setVariable(parameterNames[i], args[i]);
+        }
+
+        ExpressionParser parser = new SpelExpressionParser();
+
+        // 1. For Lock Values
         DistributeLock annotation = method.getAnnotation(DistributeLock.class);
-//        service.acquireLock()
+        String lockKey = parser.parseExpression(method.getAnnotation(DistributeLock.class).lockKey()).getValue(context, String.class);
+        String requestId = UUID.randomUUID().toString();
+        int retryCount = annotation.retryCount();
+        long expireTime = annotation.expireTime(); // ms(Default 5sec)
 
-        return null;
+        // 2. Get Lock
+        boolean isLock = redisLockService.acquireLockRetry(lockKey, requestId, retryCount, expireTime);
+
+        if(!isLock) {
+            return false;
+        }
+
+        // 3. Proceed
+        try {
+            return joinPoint.proceed();
+        } catch (Throwable e) {
+            log.error("Error occurred while executing method: {}", method.getName(), e);
+            throw e;
+        } finally {
+            // 4. Release Lock
+            redisLockService.releaseLock(lockKey, requestId);
+        }
     }
 
-
-    /**
-     * Lua 스크립트를 통한 LOCK Check(get/set)
-     * @date: 2023-07-21 18:06 기준 수정중.
-     *
-     * - param + Obj 부분 수정 해야함.
-     */
-    private void updateResponseMsgToSSO(String message, String responseMessage) {
-//        try {
-//            ObjectMapper ob = new ObjectMapper();
-//            RedisCommandFactory factory = new RedisCommandFactory((StatefulConnection<?, ?>) template.getConnectionFactory());
-//            CustomCommands commands = factory.getCommands(CustomCommands.class); // Lua Script
-
-            // FIXME Logic Start ...
-//            Object obj = commands.fcall_responseJob(
-//                    Constant.REDIS_RESPONSE_JOB_FUNCTION_NAME.getBytes(StandardCharsets.UTF_8),
-//                    Constant.REDIS_RESPONSE_JOB_FUNCTION_KEY_COUNT,
-//                    (message.getAgent() + Constant.AGENTS_JOBS_POSTFIX).getBytes(StandardCharsets.UTF_8),
-//                    (message.getAgent() + Constant.AGENTS_INBOX_POSTFIX).getBytes(StandardCharsets.UTF_8),
-//                    message.getReferenceNumber().getBytes(StandardCharsets.UTF_8),
-//                    message.getTyp().getBytes(StandardCharsets.UTF_8),
-//                    ob.writeValueAsBytes(responseMessage));
-//        }catch (Exception e){
-//            log.error("Redis Lua Script error : {}", e.getMessage());
-//            e.printStackTrace();
-//        }
-    }
 
 }

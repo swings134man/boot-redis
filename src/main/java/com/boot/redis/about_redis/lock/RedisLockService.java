@@ -49,7 +49,10 @@ public class RedisLockService {
 
     /**
      * Lock 획득 실패시 - 재시도
-     *
+     * - Random 한 재시도 시간을 두고 Lock 획득 시도
+     *   최대 20회 재시도 후 Lock 획득 실패시 false 반환
+     * @param requestId = UUID.randomUUID().toString()
+     * @param expireTime = Lock Expire Time(ms, Millisecond)
      * @return boolean = false
      */
     public boolean acquireLockRetry(String lockKey, String requestId, long expireTime) {
@@ -62,7 +65,6 @@ public class RedisLockService {
 
             if(!isLock) {
                 try {
-                    System.out.println("Retry Lock Count: " + retryCount + " : " + Thread.currentThread().getName());
                     Thread.sleep(getRandomSleepTime());
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -73,6 +75,34 @@ public class RedisLockService {
         }
         return isLock;
     }
+
+    /**
+     * @package : com.boot.redis.about_redis.lock
+     * @name : RedisLockService.java
+     * @date : 2025. 4. 15. 오전 12:39
+     * @author : lucaskang(swings134man)
+     * @Description: 재시도 횟수를 지정하여 Lock 획득 시도
+    **/
+    public boolean acquireLockRetry(String lockKey, String requestId, int retryCount, long expireTime) {
+        int count = 0;
+        boolean isLock = false;
+
+        while(!isLock && count < retryCount){
+            isLock = this.acquireLock(lockKey, requestId, expireTime);
+
+            if(!isLock) {
+                try {
+                    Thread.sleep(getRandomSleepTime());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return false;
+                }
+            }
+            count ++;
+        }
+        return isLock;
+    }
+
 
     /**
      * 랜덤한 재시도 시간 반환 (100ms ~ 500ms) - BackOff Time(Busy Waiting)
