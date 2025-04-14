@@ -24,7 +24,7 @@ public class SyncService {
     }
 
     public SyncObjectDTO findByName(String name) {
-        SyncObject entity = repository.findByName(name);
+        SyncObject entity = repository.findByName(name).orElseThrow(IllegalArgumentException::new);
 
         SyncObjectDTO resultDto = modelMapper.map(entity, SyncObjectDTO.class);
 

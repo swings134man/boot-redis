@@ -1,5 +1,8 @@
 package com.boot.redis.about_redis.lock;
 
+import com.boot.redis.about_sync.domain.SyncObject;
+import com.boot.redis.about_sync.model.SyncJpaRepository;
+import com.boot.redis.config.annotation.DistributeLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import java.util.UUID;
 public class TestRedisService {
 
     private final RedisLockService redisLockService;
+    private final SyncJpaRepository syncJpaRepository;
 
     @Transactional
     public void lockTask() {
@@ -40,7 +44,23 @@ public class TestRedisService {
         }else {
             log.warn("Redis Lock 획득 실패!");
         }//else
+    }
 
+
+    /**
+     * @package : com.boot.redis.about_redis.lock
+     * @name : TestRedisService.java
+     * @date : 2025. 4. 15. 오전 12:09
+     * @author : lucaskang(swings134man)
+     * @Description: Annotation 으로 Distribute Lock 처리 Test Methods
+     * - syncName = SyncObject 의 Name
+    **/
+    @DistributeLock(lockKey = "#lockName", retryCount = 100, expireTime = 7000L)
+    @Transactional
+    public void decreaseSyncValue(String lockName, String syncName) {
+        SyncObject syncObject = syncJpaRepository.findByName(syncName).orElseThrow(IllegalArgumentException::new);
+
+        syncObject.decrease();
     }
 
 }
