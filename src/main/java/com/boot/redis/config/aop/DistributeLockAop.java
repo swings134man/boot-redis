@@ -3,6 +3,7 @@ package com.boot.redis.config.aop;
 import com.boot.redis.about_redis.lock.RedisLockService;
 import com.boot.redis.config.annotation.DistributeLock;
 import com.boot.redis.config.redis_config.CustomCommands;
+import com.boot.redis.config.util.CustomSpringElParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.dynamic.RedisCommandFactory;
@@ -13,6 +14,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
@@ -28,6 +30,7 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Order(-1) // Transaction 보다 Lock 취득을 우선함.
 public class DistributeLockAop {
 
     private final RedisLockService redisLockService;
@@ -37,20 +40,10 @@ public class DistributeLockAop {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
 
-        // 0. SpEL
-        EvaluationContext context = new StandardEvaluationContext();
-        String[] parameterNames = signature.getParameterNames();
-        Object[] args = joinPoint.getArgs();
-
-        for (int i = 0; i < parameterNames.length; i++) {
-            context.setVariable(parameterNames[i], args[i]);
-        }
-
-        ExpressionParser parser = new SpelExpressionParser();
+        DistributeLock annotation = method.getAnnotation(DistributeLock.class);
 
         // 1. For Lock Values
-        DistributeLock annotation = method.getAnnotation(DistributeLock.class);
-        String lockKey = parser.parseExpression(method.getAnnotation(DistributeLock.class).lockKey()).getValue(context, String.class);
+        String lockKey = (String) CustomSpringElParser.getDynamicValue(signature.getParameterNames(), joinPoint.getArgs(), annotation.lockKey());
         String requestId = UUID.randomUUID().toString();
         int retryCount = annotation.retryCount();
         long expireTime = annotation.expireTime(); // ms(Default 5sec)
