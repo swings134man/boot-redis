@@ -63,4 +63,12 @@ public class TestRedisService {
         syncObject.decrease();
     }
 
+
+    // FOR TEST ONLY
+    @Transactional
+    public void decreaseValue(String syncName) {
+        SyncObject syncObject = syncJpaRepository.findByName(syncName).orElseThrow(IllegalArgumentException::new);
+
+        syncObject.decrease();
+    }
 }

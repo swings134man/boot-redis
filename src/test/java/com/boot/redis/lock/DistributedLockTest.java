@@ -70,5 +70,31 @@ class DistributedLockTest {
         System.out.println("Final Value: " + result.getValue());
     }
 
+    @Test
+    @DisplayName("2. 분산락 적용 안한 동시성 테스트")
+    void 특정값차감_동시성_100개() throws InterruptedException {
+        int numberOfThreads = 100; // 동시성 테스트를 위한 스레드 수
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
+        CountDownLatch latch = new CountDownLatch(numberOfThreads);
 
+        for (int i = 0; i < numberOfThreads; i++) {
+            executorService.submit(() -> {
+                try {
+                    // 분산락 적용 메서드 호출 (락의 key는 Object의 name으로 설정)
+                    redisService.decreaseValue(syncObject.getName());
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+
+        // 최종 확인
+        SyncObject result = syncJpaRepository.findByName(syncObject.getName())
+                .orElseThrow(IllegalArgumentException::new);
+
+        assertThat(result.getValue()).isZero();
+        System.out.println("Final Value: " + result.getValue());
+    }
 }
