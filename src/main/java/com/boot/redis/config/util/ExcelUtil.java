@@ -33,6 +33,7 @@ public class ExcelUtil {
 
     /**
      * Sxssf 대용량 Stream Download
+     * ->TODO: 사용자 최적화를 위해서는 비동기 작업 진행 후 사용자에게 링크 제공하여 다운로드 받게끔 하는것이 좋음
      * @param model
      * @param request
      * @param response
@@ -64,11 +65,6 @@ public class ExcelUtil {
                 headerBgColor = (IndexedColors) excelData.get(ExcelConstant.EX_HEADER_BG_COLOR);
             }
 
-            // 헤더 스타일 입력
-            CellStyle headerStyle = workbook.createCellStyle();
-//            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            headerStyle.setFillPattern(FillPatternType.forInt(FillPatternType.SOLID_FOREGROUND.ordinal()));
-            headerStyle.setFillForegroundColor(headerBgColor.getIndex());
 
             // 헤더 정보 가져오기
             LinkedHashMap<String, String> headerList = (LinkedHashMap<String, String>) excelData.get(ExcelConstant.EX_HEADER_LIST);
@@ -81,7 +77,7 @@ public class ExcelUtil {
                 String headerKey = keys.next();
                 Cell headerCell = headerRow.createCell(headerCnt);
                 headerCell.setCellValue(headerList.get(headerKey));
-                headerCell.setCellStyle(headerStyle);
+                headerCell.setCellStyle(createCellStyle(workbook, headerBgColor));
                 headerCnt++;
             }
 
@@ -123,6 +119,16 @@ public class ExcelUtil {
                 .append(".xls")
                 .toString();
         return URLEncoder.encode(rs, "UTF-8");
+    }
+
+    // 헤더 스타일 생성: 매번 생성하게되면 메모리에 지속적 적재됨 -> Memory Leak
+    private static CellStyle createCellStyle(SXSSFWorkbook workbook, IndexedColors headerBgColor){
+        CellStyle headerStyle = workbook.createCellStyle();
+//            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headerStyle.setFillPattern(FillPatternType.forInt(FillPatternType.SOLID_FOREGROUND.ordinal()));
+        headerStyle.setFillForegroundColor(headerBgColor.getIndex());
+
+        return headerStyle;
     }
 
     @FunctionalInterface

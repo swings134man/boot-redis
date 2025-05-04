@@ -125,7 +125,7 @@ public class BoardController {
         ExcelUtil.downloadExcelToSxssf(excelData, request, response, (sheet) -> {
             AtomicInteger rowIdx = new AtomicInteger();
 
-            int pageSize = 100;
+            int pageSize = 300;
             int pageNumber = 0;
             Page<Board> page;
 
